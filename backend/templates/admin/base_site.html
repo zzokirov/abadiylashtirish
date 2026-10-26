@@ -4,12 +4,14 @@
 
 {% block branding %}
 <div style="display: flex; align-items: center; gap: 10px; padding: 4px 0;">
-    <span style="font-size: 24px;">🕊️</span>
+    <span style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.16);color:#E9D3A8;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg>
+    </span>
     <div>
         <h1 id="site-name" style="margin: 0; font-size: 20px; font-weight: 700; color: #FFFFFF;">
             <a href="{% url 'admin:index' %}" style="color: #FFFFFF; text-decoration: none;">Abadiy Xotira</a>
         </h1>
-        <div style="font-size: 11px; color: #C5A880; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
+        <div style="font-size: 11px; color: #D9BE92; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
             Elektron Shajara va Qabriston Axborot Tizimi
         </div>
     </div>
@@ -27,13 +29,13 @@
         --header-bg: #122C21;
         --header-color: #FFFFFF;
         --header-link-color: #E8DBC9;
-        --breadcrumbs-bg: #F4F7F5;
-        --breadcrumbs-link-fg: #122C21;
+        --breadcrumbs-bg: var(--darkened-bg);
+        --breadcrumbs-link-fg: var(--body-fg);
     }
     #header {
-        background: #122C21 !important;
+        background: linear-gradient(120deg, #0E241E 0%, #14302A 60%, #1E4A3D 100%) !important;
         color: #FFFFFF !important;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        box-shadow: 0 2px 14px rgba(0,0,0,0.18);
     }
     #header a:link, #header a:visited {
         color: #E8DBC9 !important;
@@ -42,9 +44,9 @@
         color: #FFFFFF !important;
     }
     div.breadcrumbs {
-        background: #EEF4F1 !important;
-        color: #122C21 !important;
-        border-bottom: 1px solid #DFE7E3;
+        background: var(--darkened-bg) !important;
+        color: var(--body-fg) !important;
+        border-bottom: 1px solid var(--hairline-color);
     }
     .button, input[type=submit], input[type=button], .submit-row input, a.button {
         background: #122C21 !important;

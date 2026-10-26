@@ -1,668 +1,428 @@
-<!DOCTYPE html>
+{% load memorial_tags %}<!DOCTYPE html>
 <html lang="uz">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <meta name="theme-color" content="#132a22" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0E1F19" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#14302A" />
   <title>{{ person.full_name }} — Abadiy Xotira</title>
+  <meta name="description" content="{{ person.full_name }} ({{ person.birth_date|date:'Y'|default:'?' }} — {{ person.death_date|date:'Y' }}) xotirasi va shajarasi." />
+  <meta property="og:title" content="{{ person.full_name }} — Abadiy Xotira" />
+  <meta property="og:description" content="{{ person.birth_date|date:'Y'|default:'?' }} — {{ person.death_date|date:'Y' }}. Xotira sahifasi va oila shajarasi." />
+  {% if person.photo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ person.photo.url }}" />{% endif %}
 
-  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --primary-dark: #10241D;
-      --primary: #18382B;
-      --primary-light: #24523F;
-      --accent-gold: #C5A880;
-      --accent-gold-light: #E8D8C3;
-      --accent-gold-dark: #9A7B54;
-      --bg-cream: #F8FAF9;
-      --surface-white: #FFFFFF;
-      --text-main: #1A2621;
-      --text-muted: #5A6D64;
-      --border-subtle: #E3E9E6;
-      --shadow-sm: 0 2px 8px rgba(16, 36, 29, 0.04);
-      --shadow-md: 0 8px 24px rgba(16, 36, 29, 0.08);
-      --shadow-lg: 0 16px 40px rgba(16, 36, 29, 0.16);
+      --bg: #F4F1EA;
+      --surface: #FFFFFF;
+      --surface-2: #FAF8F3;
+      --ink: #15211C;
+      --ink-2: #4B5A53;
+      --ink-3: #7D8A84;
+      --line: rgba(21, 33, 28, 0.09);
+      --brand: #14302A;
+      --brand-2: #1E4A3D;
+      --gold: #B8935A;
+      --gold-soft: #E9DCC6;
+      --focus: #14302A;
+      --shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 8px 28px rgba(20, 30, 25, 0.07);
+      --shadow-lg: 0 24px 60px rgba(10, 20, 16, 0.22);
+      --radius: 22px;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0B1512;
+        --surface: #12201B;
+        --surface-2: #172821;
+        --ink: #EEF2EF;
+        --ink-2: #B4C1BA;
+        --ink-3: #82918A;
+        --line: rgba(255, 255, 255, 0.08);
+        --brand: #2B6B57;
+        --brand-2: #3A8068;
+        --gold: #D2B07C;
+        --gold-soft: #3A3324;
+        --focus: #D2B07C;
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.35);
+        color-scheme: dark;
+      }
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
     body {
-      background-color: var(--bg-cream);
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      color: var(--text-main);
+      background: var(--bg);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      color: var(--ink);
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
     .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    svg { display: block; flex-shrink: 0; }
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
 
-    /* Container */
-    .app-container {
-      max-width: 680px;
-      margin: 0 auto;
-      min-height: 100vh;
-      background: #FFFFFF;
-      box-shadow: 0 0 50px rgba(0,0,0,0.06);
+    .page { max-width: 560px; margin: 0 auto; min-height: 100vh; padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+
+    /* ---------- HERO ---------- */
+    .hero {
       position: relative;
-      padding-bottom: 70px;
-    }
-
-    /* Hero Header */
-    .hero-header {
-      background: linear-gradient(165deg, #10241D 0%, #1A3E30 60%, #122B22 100%);
-      color: #FFFFFF;
-      padding: 42px 24px 34px;
+      color: #fff;
+      padding: calc(18px + env(safe-area-inset-top)) 20px 64px;
       text-align: center;
-      position: relative;
-      border-bottom-left-radius: 36px;
-      border-bottom-right-radius: 36px;
-      box-shadow: var(--shadow-lg);
       overflow: hidden;
+      isolation: isolate;
+      background: radial-gradient(120% 90% at 50% 0%, #24584A 0%, #14302A 55%, #0C1C17 100%);
     }
-    .hero-pattern {
-      position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(197, 168, 128, 0.16) 0%, rgba(24, 56, 43, 0) 70%);
-      pointer-events: none;
+    @media (min-width: 600px) { .hero { border-radius: 0 0 32px 32px; } }
+    .hero-bg {
+      position: absolute; inset: -40px; z-index: -2;
+      background-size: cover; background-position: center;
+      filter: blur(28px) saturate(0.9) brightness(0.55);
+      transform: scale(1.1);
     }
-    .hero-pattern-2 {
-      position: absolute;
-      bottom: -60px;
-      left: -60px;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(197, 168, 128, 0.1) 0%, rgba(24, 56, 43, 0) 70%);
-      pointer-events: none;
+    .hero::after {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background:
+        radial-gradient(60% 40% at 85% 10%, rgba(210, 176, 124, 0.18), transparent 70%),
+        linear-gradient(180deg, rgba(8, 18, 14, 0.15) 0%, rgba(8, 18, 14, 0.55) 100%);
+    }
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+    .brand { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: rgba(255,255,255,0.85); }
+    .brand-mark { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.16); }
+    .icon-btn {
+      width: 40px; height: 40px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      display: grid; place-items: center; cursor: pointer; color: #fff; transition: background .2s;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.2); }
+
+    .portrait {
+      width: 136px; height: 136px; margin: 0 auto 20px; border-radius: 50%; padding: 4px;
+      background: conic-gradient(from 210deg, #E9D3A8, #B8935A, #F2E4C7, #B8935A, #E9D3A8);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+    .portrait img, .portrait .initial {
+      width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: grid; place-items: center;
+      background: linear-gradient(140deg, #2A5E4E, #10251F); border: 3px solid rgba(12, 28, 23, 0.9);
+      font-size: 54px; color: #F2E4C7;
+    }
+    .eyebrow { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(242, 228, 199, 0.8); margin-bottom: 8px; }
+    .name { font-size: clamp(30px, 8vw, 40px); font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; text-wrap: balance; }
+    .dates { margin-top: 12px; display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; font-size: 14.5px; color: rgba(255,255,255,0.82); }
+    .dates .sep { width: 18px; height: 1px; background: rgba(255,255,255,0.45); }
+    .age-pill {
+      margin-top: 16px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px;
+      font-size: 13px; font-weight: 600; color: #F2E4C7; background: rgba(210, 176, 124, 0.16); border: 1px solid rgba(210, 176, 124, 0.35);
     }
 
-    /* Avatar */
-    .avatar-wrapper {
-      position: relative;
-      width: 124px;
-      height: 124px;
-      margin: 0 auto 16px;
+    /* ---------- TABS ---------- */
+    .tabs-wrap { position: sticky; top: 0; z-index: 20; padding: 0 16px; margin-top: -30px; }
+    .tabs {
+      position: relative; display: grid; grid-template-columns: repeat(var(--tab-count, 3), 1fr); padding: 5px; border-radius: 18px;
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--line); box-shadow: var(--shadow);
     }
-    .avatar-img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3.5px solid var(--accent-gold);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.4);
-      background-color: var(--primary-light);
+    .tab-indicator {
+      position: absolute; top: 5px; bottom: 5px; left: 5px; width: calc((100% - 10px) / var(--tab-count, 3));
+      border-radius: 13px; background: var(--brand); transition: transform .35s cubic-bezier(.2,.8,.2,1);
     }
-    .avatar-placeholder {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 3.5px solid var(--accent-gold);
-      background: linear-gradient(135deg, #24523F 0%, #132A22 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 46px;
-      color: var(--accent-gold-light);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.4);
+    .tab {
+      position: relative; z-index: 1; border: 0; background: none; cursor: pointer; padding: 11px 6px; border-radius: 13px;
+      font-size: 14px; font-weight: 600; color: var(--ink-2); display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      transition: color .25s;
     }
+    .tab[aria-selected="true"] { color: #fff; }
 
-    .person-name {
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1.25;
-      color: #FFFFFF;
-      margin-bottom: 6px;
-      letter-spacing: -0.01em;
-    }
-    .person-years {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--accent-gold-light);
-      font-weight: 600;
-      font-size: 16px;
-      margin-bottom: 14px;
-    }
+    /* ---------- CONTENT ---------- */
+    .panel { padding: 22px 16px 0; animation: rise .45s ease both; }
+    .panel[hidden] { display: none; }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
-    /* Badges */
-    .badge-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 4px;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #FFFFFF;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .badge-gold {
-      background: rgba(197, 168, 128, 0.22);
-      border-color: rgba(197, 168, 128, 0.45);
-      color: #FFFFFF;
-      font-weight: 600;
-    }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; margin-bottom: 14px; }
+    .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .card-head h2 { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+    .card-head .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
 
-    .map-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 14px;
-      padding: 7px 18px;
-      border-radius: 24px;
-      border: 1px solid rgba(197, 168, 128, 0.5);
-      color: var(--accent-gold-light);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .map-btn:hover {
-      background: rgba(197, 168, 128, 0.15);
-      border-color: var(--accent-gold);
-    }
+    .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .fact { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px 16px; box-shadow: var(--shadow); }
+    .fact-label { font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+    .fact-value { margin-top: 4px; font-size: 15px; font-weight: 600; color: var(--ink); }
 
-    /* Tabs */
-    .tabs-nav {
-      display: flex;
-      margin: -20px 20px 24px;
-      background: var(--surface-white);
-      padding: 6px;
-      border-radius: 18px;
-      box-shadow: var(--shadow-md);
-      position: relative;
-      z-index: 10;
-      border: 1px solid var(--border-subtle);
-    }
-    .tab-item {
-      flex: 1;
-      padding: 12px 14px;
-      text-align: center;
-      font-size: 14.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      border-radius: 14px;
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      user-select: none;
-    }
-    .tab-item.active {
-      background: var(--primary);
-      color: #FFFFFF;
-      box-shadow: 0 4px 14px rgba(24, 56, 43, 0.22);
-    }
+    .bio { font-size: 16px; line-height: 1.85; color: var(--ink-2); }
+    .bio.has-text::first-letter { font-family: 'Cormorant Garamond', Georgia, serif; float: left; font-size: 58px; line-height: 0.85; padding: 6px 10px 0 0; color: var(--gold); font-weight: 600; }
+    .muted-note { color: var(--ink-3); font-style: italic; }
 
-    /* Content Cards */
-    .section-content {
-      padding: 0 20px;
-    }
-    .card-box {
-      background: var(--surface-white);
-      border-radius: 24px;
-      padding: 26px 22px;
-      border: 1px solid var(--border-subtle);
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 20px;
-    }
-    .card-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .divider {
-      height: 1px;
-      background: var(--border-subtle);
-      margin: 14px 0 18px;
-    }
+    .prayer { position: relative; text-align: center; padding: 30px 26px; background: linear-gradient(160deg, var(--surface) 0%, var(--surface-2) 100%); }
+    .prayer svg { margin: 0 auto 12px; color: var(--gold); }
+    .prayer p { font-size: 21px; line-height: 1.45; font-style: italic; color: var(--ink); text-wrap: balance; }
 
-    .bio-text {
-      font-size: 15.5px;
-      line-height: 1.85;
-      color: #31423B;
-      white-space: pre-line;
+    /* Location */
+    .map-frame { width: 100%; height: 220px; border: 0; border-radius: 16px; margin-bottom: 14px; background: var(--surface-2); }
+    .place-name { font-size: 22px; font-weight: 600; line-height: 1.2; }
+    .place-addr { margin-top: 4px; color: var(--ink-2); font-size: 14.5px; }
+    .grave-chip { margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 12px; background: var(--gold-soft); color: var(--ink); font-weight: 600; font-size: 14px; }
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 14px; border-radius: 14px;
+      font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; border: 1px solid var(--line);
+      background: var(--surface-2); color: var(--ink); transition: transform .15s, background .2s;
     }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--brand); border-color: transparent; color: #fff; }
+    .btn-primary:hover { background: var(--brand-2); }
+    .btn-block { width: 100%; }
 
-    /* Duoyi Xayr Bloki */
-    .prayer-banner {
-      background: linear-gradient(135deg, #F3F7F5 0%, #EBF2EE 100%);
-      border-left: 4px solid var(--accent-gold);
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      margin-top: 24px;
-    }
-    .prayer-text {
-      font-size: 19px;
-      font-style: italic;
-      color: var(--primary-dark);
-      line-height: 1.5;
-    }
+    /* ---------- TREE ---------- */
+    .tree-hint { display: flex; gap: 10px; align-items: center; font-size: 13.5px; color: var(--ink-2); margin-bottom: 18px; }
+    .gen { text-align: center; }
+    .gen-label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; }
+    .gen-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .gen-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px; border-radius: 18px; border: 1px dashed var(--line); }
+    .gen-link { width: 2px; height: 26px; margin: 12px auto; border-radius: 2px; background: linear-gradient(var(--line), var(--gold), var(--line)); }
+    .empty-slot { font-size: 13px; color: var(--ink-3); font-style: italic; padding: 12px 16px; border-radius: 14px; border: 1px dashed var(--line); }
 
-    /* Tree View */
-    .tree-scroll-container {
-      overflow-x: auto;
-      padding: 10px 0 30px;
-      -webkit-overflow-scrolling: touch;
+    .node {
+      width: 154px; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 18px; padding: 12px;
+      box-shadow: var(--shadow); cursor: pointer; display: flex; flex-direction: column; gap: 10px;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
     }
-    .tree-wrapper {
-      min-width: 580px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .node:hover { transform: translateY(-2px); border-color: var(--gold); }
+    .node-top { display: flex; align-items: center; gap: 10px; }
+    .node-avatar {
+      width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex-shrink: 0; display: grid; place-items: center;
+      background: linear-gradient(140deg, var(--brand-2), var(--brand)); color: #F2E4C7; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600;
     }
+    .node-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .node-rel { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+    .node-name { font-size: 13.5px; font-weight: 600; line-height: 1.3; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .node-years { font-size: 12px; color: var(--ink-3); }
+    .node.focal { width: 200px; background: var(--brand); border-color: transparent; box-shadow: 0 14px 34px rgba(20, 48, 42, 0.35); }
+    .node.focal .node-name { color: #fff; font-size: 15px; }
+    .node.focal .node-years { color: rgba(255,255,255,0.7); }
+    .node.focal .node-rel { color: #E9D3A8; }
+    .node.focal .node-avatar { background: #E9D3A8; color: #14302A; }
+    .node-more {
+      align-self: stretch; border: 0; cursor: pointer; padding: 7px; border-radius: 10px; font-size: 12px; font-weight: 600;
+      background: var(--surface-2); color: var(--ink-2);
+    }
+    .desc-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .desc-children { display: flex; flex-direction: column; gap: 8px; padding-left: 12px; border-left: 2px solid var(--gold-soft); }
+    .couple { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .spouse-link { display: inline-flex; align-items: center; gap: 6px; color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    @media (min-width: 480px) { .couple { flex-direction: row; } .spouse-link span { display: none; } }
 
-    .tree-section-label {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-    }
-    .label-ancestors { background: #EAF0EC; color: var(--primary); }
-    .label-focal { background: var(--primary); color: var(--accent-gold-light); }
-    .label-descendants { background: #EAF0EC; color: var(--primary); }
+    .skeleton { height: 64px; width: 154px; border-radius: 18px; background: linear-gradient(90deg, var(--surface-2), var(--surface), var(--surface-2)); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
 
-    /* Node Card */
-    .person-card {
-      width: 195px;
-      background: #FFFFFF;
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 12px;
-      box-shadow: var(--shadow-sm);
-      cursor: pointer;
-      transition: all 0.22s ease;
-      text-align: left;
-      position: relative;
-    }
-    .person-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
-      border-color: var(--primary);
-    }
-    .person-card.focal-card {
-      background: var(--primary);
-      color: #FFFFFF;
-      border: 2.5px solid var(--accent-gold);
-      box-shadow: 0 8px 24px rgba(24, 56, 43, 0.25);
-    }
+    /* ---------- SHARE / FOOTER ---------- */
+    .share-card { text-align: center; }
+    .share-card p { color: var(--ink-2); font-size: 14px; margin-bottom: 14px; }
+    .share-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .share-row .btn { flex-direction: column; gap: 6px; padding: 12px 6px; font-size: 12.5px; }
+    .btn-telegram { background: #229ED9; border-color: transparent; color: #fff; }
+    .footer { text-align: center; color: var(--ink-3); font-size: 12px; padding: 18px 16px 0; }
 
-    .card-top {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    /* ---------- SHEET ---------- */
+    .sheet-backdrop {
+      position: fixed; inset: 0; z-index: 50; background: rgba(6, 12, 10, 0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      opacity: 0; pointer-events: none; transition: opacity .25s; display: flex; align-items: flex-end; justify-content: center;
     }
-    .card-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 16px;
-      flex-shrink: 0;
+    .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+    .sheet {
+      width: 100%; max-width: 560px; background: var(--surface); border-radius: 28px 28px 0 0; padding: 10px 22px calc(24px + env(safe-area-inset-bottom));
+      transform: translateY(100%); transition: transform .35s cubic-bezier(.2,.8,.2,1); box-shadow: var(--shadow-lg); max-height: 88vh; overflow-y: auto;
     }
-    .focal-card .card-avatar {
-      background: var(--accent-gold);
-      color: var(--primary-dark);
-    }
+    .sheet-backdrop.open .sheet { transform: none; }
+    .grabber { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 0 auto 14px; }
+    .sheet-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .sheet-head .node-avatar { width: 60px; height: 60px; font-size: 26px; }
+    .sheet-name { font-size: 24px; font-weight: 600; line-height: 1.15; }
+    .sheet-close { margin-left: auto; align-self: flex-start; width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--surface-2); display: grid; place-items: center; cursor: pointer; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 500; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-2); }
+    .sheet-bio { font-size: 15px; line-height: 1.75; color: var(--ink-2); margin-bottom: 18px; }
 
-    .card-relation {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      line-height: 1.1;
-      margin-bottom: 2px;
+    .toast {
+      position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 60; transform: translate(-50%, 20px);
+      background: var(--ink); color: var(--bg); padding: 11px 18px; border-radius: 12px; font-size: 14px; font-weight: 600;
+      opacity: 0; pointer-events: none; transition: all .25s; box-shadow: var(--shadow-lg);
     }
-    .focal-card .card-relation { color: var(--accent-gold-light); }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-    .card-name {
-      font-size: 13.5px;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.25;
-    }
-
-    .card-years {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      margin-top: 2px;
-      font-weight: 500;
-    }
-    .focal-card .card-years { color: var(--accent-gold-light); }
-
-    .expand-chip {
-      margin-top: 8px;
-      padding-top: 6px;
-      border-top: 1px solid #EEF3F0;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-    .focal-card .expand-chip {
-      border-top-color: rgba(255,255,255,0.15);
-      color: #FFFFFF;
-    }
-
-    /* Connectors */
-    .tree-line-v {
-      width: 2px;
-      height: 24px;
-      background: var(--accent-gold);
-      margin: 4px auto;
-    }
-
-    /* Modal Sheet */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(16, 36, 29, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.25s ease;
-    }
-    .modal-overlay.open {
-      display: flex;
-      opacity: 1;
-    }
-    .modal-sheet {
-      background: #FFFFFF;
-      width: 100%;
-      max-width: 540px;
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      padding: 24px 22px 34px;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.25);
-      max-height: 85vh;
-      overflow-y: auto;
-      transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .modal-overlay.open .modal-sheet {
-      transform: translateY(0);
-    }
-    .drag-handle {
-      width: 42px;
-      height: 4.5px;
-      background: #D8DFDB;
-      border-radius: 3px;
-      margin: 0 auto 18px;
-    }
-
-    /* Buttons */
-    .action-btn {
-      display: block;
-      width: 100%;
-      padding: 13px;
-      background: linear-gradient(135deg, #18382B 0%, #24523F 100%);
-      color: #FFFFFF;
-      text-align: center;
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 700;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      margin-top: 18px;
-      box-shadow: 0 4px 16px rgba(24, 56, 43, 0.25);
-    }
-
-    /* Share Footer */
-    .footer-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border-subtle);
-      padding: 10px 20px;
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      z-index: 50;
-      max-width: 680px;
-      margin: 0 auto;
-    }
-    .footer-btn {
-      flex: 1;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 13.5px;
-      font-weight: 600;
-      border: 1px solid var(--border-subtle);
-      background: #FFFFFF;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .footer-btn.primary {
-      background: var(--primary);
-      color: #FFFFFF;
-      border-color: var(--primary);
-    }
-    /* Shajara: ajdodlar va avlodlar joylashuvi */
-    .ancestors-wrap {
-      display: flex;
-      gap: 32px;
-      justify-content: center;
-      align-items: flex-end;
-      margin-bottom: 8px;
-    }
-    .ancestor-branch {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-    .ancestor-row {
-      display: flex;
-      gap: 10px;
-    }
-    .descendant-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    .descendant-children {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding-left: 12px;
-      border-left: 2px dashed var(--accent-gold);
-      margin-top: 6px;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 <body>
+  <!-- SVG ikonkalar -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+    <symbol id="i-tree" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2.5"/><circle cx="5" cy="19.5" r="2.5"/><circle cx="19" cy="19.5" r="2.5"/><path d="M12 7v5M5 17v-2.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2V17"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-telegram" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.7 19.4c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13 1.4 11.5c-1-.3-1.1-1 .2-1.5L20.5 2.7c.9-.3 1.7.2 1.4 1.6z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 17 3 13.6 3 9.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 2.5C21 13.6 17 17 12 21z"/></symbol>
+    <symbol id="i-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 19-9-9 19-2-8-8-2z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </svg>
 
-  <div class="app-container">
+  <div class="page">
+    <!-- HERO -->
+    <header class="hero">
+      {% if person.photo %}<div class="hero-bg" style="background-image:url('{{ person.photo.url }}')"></div>{% endif %}
+      <div class="topbar">
+        <span class="brand"><span class="brand-mark"><svg width="15" height="15"><use href="#i-leaf"/></svg></span>Abadiy Xotira</span>
+        <button class="icon-btn" type="button" onclick="shareMemorial()" aria-label="Ulashish"><svg width="19" height="19"><use href="#i-share"/></svg></button>
+      </div>
 
-    <!-- 1. HERO HEADER -->
-    <header class="hero-header">
-      <div class="hero-pattern"></div>
-      <div class="hero-pattern-2"></div>
-
-      <div class="avatar-wrapper">
+      <div class="portrait">
         {% if person.photo %}
-          <img src="{{ person.photo.url }}" alt="{{ person.full_name }}" class="avatar-img" />
+          <img src="{{ person.photo.url }}" alt="{{ person.full_name }}" />
         {% else %}
-          <div class="avatar-placeholder serif">{{ person.first_name|first }}</div>
+          <div class="initial serif">{{ person.first_name|first }}</div>
         {% endif %}
       </div>
 
-      <h1 class="person-name serif">{{ person.full_name }}</h1>
-      <div class="person-years">
-        <span>📅</span>
-        <span>{{ person.birth_date|date:"Y"|default:"?" }} — {{ person.death_date|date:"Y" }}</span>
+      <div class="eyebrow">Xotirasiga bag‘ishlanadi</div>
+      <h1 class="name serif">{{ person.full_name }}</h1>
+      <div class="dates">
+        <span>{{ person.birth_date|uz_date|default:"Noma’lum" }}</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span>{{ person.death_date|uz_date }}</span>
       </div>
-
-      <div class="badge-group">
-        {% if person.cemetery %}
-          <div class="badge">📍 {{ person.cemetery.name }}</div>
-        {% endif %}
-        {% if person.grave_number %}
-          <div class="badge badge-gold">Qabr № {{ person.grave_number }}</div>
-        {% endif %}
-      </div>
-
-      {% if person.cemetery.latitude and person.cemetery.longitude %}
-        <div>
-          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query={{ person.cemetery.latitude }},{{ person.cemetery.longitude }}" target="_blank">
-            🗺️ Qabristonni xaritadan ochish ↗
-          </a>
-        </div>
+      {% if person.age_at_death is not None %}
+        <div><span class="age-pill"><svg width="14" height="14"><use href="#i-heart"/></svg>{{ person.age_at_death }} yil umr ko‘rdi</span></div>
       {% endif %}
     </header>
 
-    <!-- 2. NAVIGATION TABS -->
-    <nav class="tabs-nav">
-      <div class="tab-item active" id="tab-bio-btn" onclick="switchTab('bio')">
-        <span>📖</span>
-        <span>Tarjimai holi</span>
+    <!-- TABS -->
+    <div class="tabs-wrap">
+      <div class="tabs" role="tablist" style="--tab-count: 3;">
+        <span class="tab-indicator" id="tab-indicator"></span>
+        <button class="tab" role="tab" id="tab-bio" aria-controls="panel-bio" aria-selected="true" onclick="switchTab(0)"><svg width="17" height="17"><use href="#i-book"/></svg>Hayoti</button>
+        <button class="tab" role="tab" id="tab-tree" aria-controls="panel-tree" aria-selected="false" onclick="switchTab(1)"><svg width="17" height="17"><use href="#i-tree"/></svg>Shajara</button>
+        <button class="tab" role="tab" id="tab-place" aria-controls="panel-place" aria-selected="false" onclick="switchTab(2)"><svg width="17" height="17"><use href="#i-pin"/></svg>Qabr joyi</button>
       </div>
-      <div class="tab-item" id="tab-tree-btn" onclick="switchTab('tree')">
-        <span>🌳</span>
-        <span>Elektron Shajara</span>
+    </div>
+
+    <!-- HAYOTI -->
+    <main class="panel" id="panel-bio" role="tabpanel" aria-labelledby="tab-bio">
+      <div class="facts">
+        <div class="fact"><div class="fact-label">Tug‘ilgan</div><div class="fact-value">{{ person.birth_date|uz_date|default:"Noma’lum" }}</div></div>
+        <div class="fact"><div class="fact-label">Vafot etgan</div><div class="fact-value">{{ person.death_date|uz_date }}</div></div>
+        {% if person.age_at_death is not None %}
+          <div class="fact"><div class="fact-label">Umri</div><div class="fact-value">{{ person.age_at_death }} yil</div></div>
+        {% endif %}
+        {% if person.grave_number %}
+          <div class="fact"><div class="fact-label">Qabr raqami</div><div class="fact-value">{{ person.grave_number }}</div></div>
+        {% endif %}
       </div>
-    </nav>
 
-    <!-- 3. TAB 1: TARJIMAI HOL -->
-    <main class="section-content" id="tab-bio-content">
-      <div class="card-box">
-        <h2 class="card-title serif">
-          <span>🕊️</span>
-          <span>Hayot Yo‘li va Xotiralar</span>
-        </h2>
-        <div class="divider"></div>
+      <section class="card">
+        <div class="card-head"><span class="dot"></span><h2>Hayot yo‘li</h2></div>
+        {% if person.biography %}
+          <p class="bio has-text">{{ person.biography|linebreaksbr }}</p>
+        {% else %}
+          <p class="bio muted-note">Tarjimai hol hali kiritilmagan.</p>
+        {% endif %}
+      </section>
 
-        <p class="bio-text">
-          {% if person.biography %}
-            {{ person.biography|linebreaksbr }}
-          {% else %}
-            Ushbu marhum haqida tarjimai hol ma’lumotlari hali kiritilmagan.
+      <section class="card prayer">
+        <svg width="26" height="26"><use href="#i-leaf"/></svg>
+        <p class="serif">«Oxiratlari obod, joylari jannatda bo‘lsin. Qoldirgan yaxshi nomlari va xayrli amallari abadiy yashasin.»</p>
+      </section>
+    </main>
+
+    <!-- SHAJARA -->
+    <section class="panel" id="panel-tree" role="tabpanel" aria-labelledby="tab-tree" hidden>
+      <div class="card">
+        <div class="tree-hint"><svg width="18" height="18"><use href="#i-tree"/></svg>Har bir shaxsni bosib, batafsil ma’lumot va uning sahifasini ochishingiz mumkin.</div>
+        <div id="tree-root">
+          <div class="gen-row"><div class="skeleton"></div><div class="skeleton"></div></div>
+          <div class="gen-link"></div>
+          <div class="gen-row"><div class="skeleton" style="width:200px"></div></div>
+          <div class="gen-link"></div>
+          <div class="gen-row"><div class="skeleton"></div><div class="skeleton"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QABR JOYI -->
+    <section class="panel" id="panel-place" role="tabpanel" aria-labelledby="tab-place" hidden>
+      <div class="card">
+        {% if person.cemetery %}
+          {% if map %}
+            <iframe class="map-frame" loading="lazy" title="Qabriston xaritasi"
+              src="https://www.openstreetmap.org/export/embed.html?bbox={{ map.bbox }}&amp;layer=mapnik&amp;marker={{ map.lat }},{{ map.lon }}"></iframe>
           {% endif %}
-        </p>
-
-        <div class="prayer-banner">
-          <p class="prayer-text serif">
-            «Oxiratlari obod, joylari jannatda bo‘lsin. Qoldirgan yaxshi nomlari va xayrli amallari abadiy yashasin.»
-          </p>
-        </div>
-      </div>
-    </main>
-
-    <!-- 4. TAB 2: ELEKTRON SHAJARA -->
-    <main class="section-content" id="tab-tree-content" style="display: none;">
-      <div class="card-box" style="padding: 20px 14px;">
-        <div style="text-align: center; margin-bottom: 12px;">
-          <p style="font-size: 13px; color: var(--text-muted);">
-            💡 Har qanday shaxs ustiga bosib uning qabri va shajarasiga o‘tishingiz mumkin
-          </p>
-        </div>
-
-        <div class="tree-scroll-container">
-          <div class="tree-wrapper" id="tree-root">
-            <div style="padding: 30px; color: var(--text-muted); font-size: 14px;">
-              Shajara yuklanmoqda...
+          <div class="place-name serif">{{ person.cemetery.name }}</div>
+          {% if person.cemetery.address %}<div class="place-addr">{{ person.cemetery.address }}</div>{% endif %}
+          {% if person.grave_number %}<div class="grave-chip"><svg width="16" height="16"><use href="#i-pin"/></svg>{{ person.grave_number }}</div>{% endif %}
+          {% if map %}
+            <div class="btn-row">
+              <a class="btn btn-primary" target="_blank" rel="noopener" href="https://yandex.uz/maps/?rtext=~{{ map.lat }},{{ map.lon }}&amp;rtt=auto"><svg width="17" height="17"><use href="#i-nav"/></svg>Yo‘nalish</a>
+              <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ map.lat }},{{ map.lon }}"><svg width="17" height="17"><use href="#i-pin"/></svg>Google Maps</a>
             </div>
-          </div>
-        </div>
+          {% endif %}
+        {% else %}
+          <p class="muted-note">Dafn etilgan joy haqida ma’lumot hali kiritilmagan.</p>
+        {% endif %}
       </div>
-    </main>
+    </section>
 
-    <!-- 5. BOTTOM BAR (SHARE ONLY) -->
-    <div class="footer-bar">
-      <button class="footer-btn" onclick="shareMemorial()">
-        <span>🔗</span>
-        <span>Ushbu Xotira Sahifasini Ulashish</span>
-      </button>
+    <!-- ULASHISH -->
+    <div class="panel" style="animation-delay:.1s">
+      <section class="card share-card">
+        <div class="card-head" style="justify-content:center;"><span class="dot"></span><h2>Xotirani ulashing</h2></div>
+        <p>Yaqinlaringiz ham duo qilishlari uchun sahifani ulashing.</p>
+        <div class="share-row">
+          <a class="btn btn-telegram" id="share-telegram" target="_blank" rel="noopener" href="#"><svg width="20" height="20"><use href="#i-telegram"/></svg>Telegram</a>
+          <button class="btn" type="button" onclick="copyLink()"><svg width="20" height="20"><use href="#i-copy"/></svg>Nusxa olish</button>
+          <button class="btn" type="button" onclick="shareMemorial()"><svg width="20" height="20"><use href="#i-share"/></svg>Boshqa</button>
+        </div>
+      </section>
+      <footer class="footer">Abadiy Xotira · Elektron shajara</footer>
     </div>
-
   </div>
 
-  <!-- MODAL BOTTOM SHEET -->
-  <div class="modal-overlay" id="modal-sheet" onclick="closeModal(event)">
-    <div class="modal-sheet" onclick="event.stopPropagation()">
-      <div class="drag-handle"></div>
-
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-        <span style="font-size: 11px; font-weight: 700; color: var(--accent-gold-dark); text-transform: uppercase; letter-spacing: 0.06em;" id="m-relation">Qarindoshlik</span>
-        <button onclick="closeModal()" style="border: none; background: none; font-size: 20px; color: #888; cursor: pointer;">✕</button>
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
-        <div class="card-avatar" style="width: 56px; height: 56px; font-size: 22px;" id="m-avatar">🕊️</div>
+  <!-- SHEET -->
+  <div class="sheet-backdrop" id="sheet" onclick="if (event.target === this) closeSheet()" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="s-name">
+      <div class="grabber"></div>
+      <div class="sheet-head">
+        <div class="node-avatar" id="s-avatar"></div>
         <div>
-          <h3 style="font-size: 18px; font-weight: 700; color: var(--primary);" id="m-name">—</h3>
-          <p style="font-size: 13px; color: var(--text-muted); font-weight: 500;" id="m-years">—</p>
+          <div class="node-rel" id="s-rel"></div>
+          <div class="sheet-name serif" id="s-name"></div>
         </div>
+        <button class="sheet-close" type="button" onclick="closeSheet()" aria-label="Yopish"><svg width="16" height="16"><use href="#i-close"/></svg></button>
       </div>
-
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;" id="m-badges"></div>
-
-      <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px; margin-bottom: 16px;">
-        <h4 style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Tarjimai holi:</h4>
-        <p style="font-size: 14px; line-height: 1.7; color: #3A4C44;" id="m-bio">—</p>
-      </div>
-
-      <a id="m-navigate-btn" class="action-btn" href="#" style="display: none;">
-        🌳 Ushbu marhum shajarasiga o‘tish
-      </a>
+      <div class="chips" id="s-chips"></div>
+      <p class="sheet-bio" id="s-bio"></p>
+      <a class="btn btn-primary btn-block" id="s-link" href="#">Xotira sahifasini ochish<svg width="17" height="17"><use href="#i-arrow"/></svg></a>
     </div>
   </div>
+
+  <div class="toast" id="toast" role="status"></div>
 
   <script>
     const TOKEN = "{{ token|escapejs }}";
     const PERSON_NAME = "{{ person.full_name|escapejs }}";
+    const TABS = ['bio', 'tree', 'place'];
     let treeData = null;
+    let treeLoading = false;
     let expandedMap = {};
     // Kartochkalar ma'lumoti shu ro'yxatda saqlanadi (onclick ichiga JSON qo'yish
     // O'ktam, G'ulom kabi apostrofli ismlarda sahifani buzardi)
@@ -679,145 +439,134 @@
         .replace(/'/g, '&#39;');
     }
 
-    function switchTab(tab) {
-      const isBio = tab === 'bio';
-      document.getElementById('tab-bio-btn').classList.toggle('active', isBio);
-      document.getElementById('tab-tree-btn').classList.toggle('active', !isBio);
-      document.getElementById('tab-bio-content').style.display = isBio ? 'block' : 'none';
-      document.getElementById('tab-tree-content').style.display = isBio ? 'none' : 'block';
-      if (!isBio && !treeData) loadTree();
+    function icon(name, size = 16) {
+      return `<svg width="${size}" height="${size}"><use href="#i-${name}"/></svg>`;
     }
 
+    // ---------- Tablar ----------
+    function switchTab(index) {
+      TABS.forEach((name, i) => {
+        const active = i === index;
+        document.getElementById(`tab-${name}`).setAttribute('aria-selected', active);
+        document.getElementById(`panel-${name}`).hidden = !active;
+      });
+      document.getElementById('tab-indicator').style.transform = `translateX(${index * 100}%)`;
+      if (TABS[index] === 'tree' && !treeData) loadTree();
+      history.replaceState(null, '', index === 0 ? location.pathname : `#${TABS[index]}`);
+    }
+
+    // ---------- Shajara ----------
     async function loadTree() {
+      if (treeLoading) return;
+      treeLoading = true;
       const root = document.getElementById('tree-root');
       try {
-        const res = await fetch(`/api/v1/public/deceased/${encodeURIComponent(TOKEN)}/tree/?_t=${Date.now()}`, {
-          cache: 'no-store',
-        });
+        const res = await fetch(`/api/v1/public/deceased/${encodeURIComponent(TOKEN)}/tree/?_t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) throw new Error("Shajara topilmadi");
         treeData = await res.json();
         renderTree();
       } catch (err) {
         root.innerHTML = `
-          <div style="padding: 24px; text-align: center;">
-            <p style="color:#c00; margin-bottom: 12px;">Shajarani yuklashda xatolik yuz berdi.</p>
-            <button class="expand-chip" style="display:inline-block;" onclick="loadTree()">Qayta urinish ↻</button>
+          <div style="text-align:center; padding: 16px 0;">
+            <p class="muted-note" style="margin-bottom: 12px;">Shajarani yuklab bo‘lmadi. Internet aloqasini tekshiring.</p>
+            <button class="btn" type="button" onclick="loadTree()">Qayta urinish</button>
           </div>`;
+      } finally {
+        treeLoading = false;
       }
     }
 
-    function emptyNote(text) {
-      return `<div style="font-size:12px; color:#888; font-style:italic; padding:16px;">${escapeHtml(text)}</div>`;
+    function emptySlot(text) {
+      return `<div class="empty-slot">${escapeHtml(text)}</div>`;
     }
 
-    // Ota yoki ona va ularning ota-onasi (bobo va buvi) — yuqoridan pastga
-    function renderAncestorBranch(parent, parentLabel, sideLabel, missingText) {
-      if (!parent) return `<div class="ancestor-branch">${emptyNote(missingText)}</div>`;
-
-      let html = `<div class="ancestor-branch">`;
-      if (parent.father || parent.mother) {
-        html += `<div class="ancestor-row">`;
-        html += renderPersonCard(parent.father, `Bobosi (${sideLabel})`);
-        html += renderPersonCard(parent.mother, `Buvisi (${sideLabel})`);
-        html += `</div>`;
-        html += `<div class="tree-line-v" style="height: 14px;"></div>`;
-      }
-      html += renderPersonCard(parent, parentLabel);
-      html += `</div>`;
-      return html;
+    function generation(label, inner) {
+      return `<div class="gen"><div class="gen-label">${escapeHtml(label)}</div>${inner}</div>`;
     }
 
     function renderDescendants(children, depth) {
       const label = DESCENDANT_LABELS[Math.min(depth, DESCENDANT_LABELS.length - 1)];
-      let html = '';
-      children.forEach(child => {
-        const grandChildren = child.children || [];
+      return children.map(child => {
+        const kids = child.children || [];
         const isExp = !!expandedMap[child.id];
-
-        html += `<div class="descendant-item">`;
-        html += renderPersonCard(child, label, false, grandChildren.length, isExp);
-        if (grandChildren.length > 0 && isExp) {
-          html += `<div class="descendant-children">`;
-          html += renderDescendants(grandChildren, depth + 1);
-          html += `</div>`;
+        let html = `<div class="desc-item">${renderNode(child, label, false, kids.length, isExp)}`;
+        if (kids.length > 0 && isExp) {
+          html += `<div class="desc-children">${renderDescendants(kids, depth + 1)}</div>`;
         }
-        html += `</div>`;
-      });
-      return html;
+        return html + `</div>`;
+      }).join('');
     }
 
     function renderTree() {
       if (!treeData) return;
       nodeRegistry = [];
+      const father = treeData.paternal_ancestors;
+      const mother = treeData.maternal_ancestors;
+      const link = `<div class="gen-link"></div>`;
       let html = '';
 
-      // 1. AJDODLAR
-      html += `<div class="tree-section-label label-ancestors">Ajdodlari (Ota va Ona tomon)</div>`;
-      html += `<div class="ancestors-wrap">`;
-      html += renderAncestorBranch(treeData.paternal_ancestors, "Otasi", "ota tomon", "Otasi kiritilmagan");
-      html += renderAncestorBranch(treeData.maternal_ancestors, "Onasi", "ona tomon", "Onasi kiritilmagan");
-      html += `</div>`;
-
-      html += `<div class="tree-line-v" style="height: 24px; background: var(--primary);"></div>`;
-
-      // 2. MARKAZIY MARHUM VA TURMUSH O'RTOG'I
-      html += `<div class="tree-section-label label-focal">Markaziy Marhum</div>`;
-      html += `<div style="display: flex; gap: 18px; align-items: center; justify-content: center; flex-wrap: wrap;">`;
-      html += renderPersonCard(treeData.focal_person, "Asosiy Marhum", true);
-      (treeData.spouses || []).forEach(sp => {
-        html += `<span style="font-size: 20px;">💍</span>`;
-        html += renderPersonCard(sp, "Turmush o‘rtog‘i");
-      });
-      html += `</div>`;
-
-      html += `<div class="tree-line-v" style="height: 24px; background: var(--primary);"></div>`;
-
-      // 3. AVLODLARI
-      const descendants = treeData.descendants || [];
-      html += `<div class="tree-section-label label-descendants">Farzandlari (${descendants.length})</div>`;
-      if (descendants.length > 0) {
-        html += `<div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;">`;
-        html += renderDescendants(descendants, 0);
-        html += `</div>`;
-      } else {
-        html += emptyNote("Farzandlar kiritilmagan");
+      // 1. Bobo va buvilar (faqat mavjud bo'lsa)
+      const grandGroups = [];
+      if (father && (father.father || father.mother)) {
+        grandGroups.push(`<div class="gen-group">${renderNode(father.father, 'Bobosi · ota tomon')}${renderNode(father.mother, 'Buvisi · ota tomon')}</div>`);
       }
+      if (mother && (mother.father || mother.mother)) {
+        grandGroups.push(`<div class="gen-group">${renderNode(mother.father, 'Bobosi · ona tomon')}${renderNode(mother.mother, 'Buvisi · ona tomon')}</div>`);
+      }
+      if (grandGroups.length) {
+        html += generation('Bobo va buvilari', `<div class="gen-row">${grandGroups.join('')}</div>`) + link;
+      }
+
+      // 2. Ota-ona
+      const parents = [
+        father ? renderNode(father, 'Otasi') : emptySlot('Otasi kiritilmagan'),
+        mother ? renderNode(mother, 'Onasi') : emptySlot('Onasi kiritilmagan'),
+      ];
+      html += generation('Ota-onasi', `<div class="gen-row">${parents.join('')}</div>`) + link;
+
+      // 3. Markaziy shaxs va turmush o'rtoqlari
+      let focalRow = renderNode(treeData.focal_person, 'Ushbu sahifa', true);
+      (treeData.spouses || []).forEach(sp => {
+        focalRow += `<span class="spouse-link">${icon('heart', 16)}<span>Turmush o‘rtog‘i</span></span>` + renderNode(sp, "Turmush o‘rtog‘i");
+      });
+      html += `<div class="gen"><div class="couple">${focalRow}</div></div>` + link;
+
+      // 4. Farzandlar
+      const descendants = treeData.descendants || [];
+      html += generation(
+        `Farzandlari · ${descendants.length}`,
+        descendants.length
+          ? `<div class="gen-row" style="align-items:flex-start;">${renderDescendants(descendants, 0)}</div>`
+          : `<div class="gen-row">${emptySlot('Farzandlar kiritilmagan')}</div>`
+      );
 
       document.getElementById('tree-root').innerHTML = html;
     }
 
     function renderAvatar(p) {
-      if (p.photo_url) {
-        return `<img src="${escapeHtml(p.photo_url)}" alt="" loading="lazy" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
-      }
-      return escapeHtml(p.first_name ? p.first_name[0] : '🕊️');
+      if (p.photo_url) return `<img src="${escapeHtml(p.photo_url)}" alt="" loading="lazy">`;
+      return escapeHtml(p.first_name ? p.first_name[0] : '•');
     }
 
-    function renderPersonCard(p, relation, isFocal = false, childrenCount = 0, isExpanded = false) {
+    function renderNode(p, relation, isFocal = false, childrenCount = 0, isExpanded = false) {
       if (!p) return '';
       const idx = nodeRegistry.push({ ...p, relation, isFocal }) - 1;
       const years = `${p.birth_year || '?'} — ${p.death_year || '?'}`;
-
-      let expandHtml = '';
-      if (childrenCount > 0) {
-        expandHtml = `
-          <div class="expand-chip" onclick="event.stopPropagation(); toggleChild(${Number(p.id)})">
-            ${isExpanded ? 'Yopish ▴' : `Avlodlari (${childrenCount}) ▾`}
-          </div>`;
-      }
-
+      const more = childrenCount > 0
+        ? `<span class="node-more" role="button" tabindex="0" onclick="event.stopPropagation(); toggleChild(${Number(p.id)})">${isExpanded ? 'Yopish ▴' : `Avlodlari · ${childrenCount} ▾`}</span>`
+        : '';
       return `
-        <div class="person-card ${isFocal ? 'focal-card' : ''}" onclick="showModal(${idx})">
-          <div class="card-top">
-            <div class="card-avatar" style="overflow:hidden;">${renderAvatar(p)}</div>
-            <div style="flex:1; min-width:0;">
-              <div class="card-relation">${escapeHtml(relation)}</div>
-              <div class="card-name">${escapeHtml(p.full_name)}</div>
-              <div class="card-years">${escapeHtml(years)}</div>
-            </div>
-          </div>
-          ${expandHtml}
-        </div>`;
+        <button type="button" class="node ${isFocal ? 'focal' : ''}" onclick="openSheet(${idx})">
+          <span class="node-top">
+            <span class="node-avatar">${renderAvatar(p)}</span>
+            <span style="min-width:0;">
+              <span class="node-rel" style="display:block;">${escapeHtml(relation)}</span>
+              <span class="node-name">${escapeHtml(p.full_name)}</span>
+              <span class="node-years" style="display:block;">${escapeHtml(years)}</span>
+            </span>
+          </span>
+          ${more}
+        </button>`;
     }
 
     function toggleChild(id) {
@@ -825,69 +574,91 @@
       renderTree();
     }
 
-    function showModal(idx) {
+    // ---------- Pastki oyna ----------
+    function openSheet(idx) {
       const p = nodeRegistry[idx];
       if (!p) return;
-      document.getElementById('m-relation').innerText = p.relation || "Qarindoshlik";
-      document.getElementById('m-avatar').innerHTML = renderAvatar(p);
-      document.getElementById('m-name').innerText = p.full_name;
-      document.getElementById('m-years').innerText = `📅 ${p.birth_year || '?'} — ${p.death_year || '?'}`;
-      document.getElementById('m-bio').innerText = p.biography_preview || "Qo‘shimcha tarjimai hol kiritilmagan.";
+      document.getElementById('s-rel').textContent = p.relation || '';
+      document.getElementById('s-avatar').innerHTML = renderAvatar(p);
+      document.getElementById('s-name').textContent = p.full_name;
+      document.getElementById('s-bio').textContent = p.biography_preview || "Tarjimai hol hali kiritilmagan.";
 
-      let badgesHtml = '';
-      if (p.cemetery_name) badgesHtml += `<span class="badge" style="background:#EEF4F0; color:#18382B;">📍 ${escapeHtml(p.cemetery_name)}</span>`;
-      if (p.grave_number) badgesHtml += `<span class="badge" style="background:#EEF4F0; color:#18382B; font-weight:700;">Qabr: ${escapeHtml(p.grave_number)}</span>`;
-      document.getElementById('m-badges').innerHTML = badgesHtml;
+      let chips = `<span class="chip">${escapeHtml(`${p.birth_year || '?'} — ${p.death_year || '?'}`)}</span>`;
+      if (p.cemetery_name) chips += `<span class="chip">${icon('pin', 14)}${escapeHtml(p.cemetery_name)}</span>`;
+      if (p.grave_number) chips += `<span class="chip">${escapeHtml(p.grave_number)}</span>`;
+      document.getElementById('s-chips').innerHTML = chips;
 
-      const navBtn = document.getElementById('m-navigate-btn');
-      if (!p.isFocal && p.public_token) {
-        navBtn.style.display = 'block';
-        navBtn.href = `/m/${encodeURIComponent(p.public_token)}/`;
-      } else {
-        navBtn.style.display = 'none';
-      }
+      const link = document.getElementById('s-link');
+      const canOpen = !p.isFocal && p.public_token;
+      link.style.display = canOpen ? 'flex' : 'none';
+      if (canOpen) link.href = `/m/${encodeURIComponent(p.public_token)}/`;
 
-      document.getElementById('modal-sheet').classList.add('open');
+      const sheet = document.getElementById('sheet');
+      sheet.classList.add('open');
+      sheet.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
     }
 
-    function closeModal(e) {
-      if (!e || e.target.id === 'modal-sheet' || e.target.tagName === 'BUTTON') {
-        document.getElementById('modal-sheet').classList.remove('open');
-      }
+    function closeSheet() {
+      const sheet = document.getElementById('sheet');
+      sheet.classList.remove('open');
+      sheet.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
     }
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Escape') closeSheet();
     });
 
-    function copyLinkFallback(url) {
-      // navigator.clipboard faqat HTTPS (xavfsiz kontekst) da mavjud
-      const input = document.createElement('textarea');
-      input.value = url;
-      input.style.position = 'fixed';
-      input.style.opacity = '0';
-      document.body.appendChild(input);
-      input.select();
-      try { document.execCommand('copy'); } finally { document.body.removeChild(input); }
+    // ---------- Ulashish ----------
+    function showToast(text) {
+      const t = document.getElementById('toast');
+      t.textContent = text;
+      t.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => t.classList.remove('show'), 2200);
     }
 
-    async function shareMemorial() {
-      const url = window.location.href;
-      if (navigator.share) {
-        navigator.share({ title: `${PERSON_NAME} — Abadiy Xotira`, url }).catch(() => {});
-        return;
-      }
+    function pageUrl() {
+      return location.origin + location.pathname;
+    }
+
+    async function copyLink() {
+      const url = pageUrl();
       try {
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(url);
         } else {
-          copyLinkFallback(url);
+          // navigator.clipboard faqat HTTPS (xavfsiz kontekst) da mavjud
+          const input = document.createElement('textarea');
+          input.value = url;
+          input.style.position = 'fixed';
+          input.style.opacity = '0';
+          document.body.appendChild(input);
+          input.select();
+          document.execCommand('copy');
+          input.remove();
         }
-        alert("Xotira sahifasi havolasi nusxalandi!");
+        showToast("Havola nusxalandi");
       } catch (err) {
         prompt("Havolani nusxalang:", url);
       }
     }
+
+    function shareMemorial() {
+      if (navigator.share) {
+        navigator.share({ title: `${PERSON_NAME} — Abadiy Xotira`, url: pageUrl() }).catch(() => {});
+      } else {
+        copyLink();
+      }
+    }
+
+    document.getElementById('share-telegram').href =
+      `https://t.me/share/url?url=${encodeURIComponent(pageUrl())}&text=${encodeURIComponent(`${PERSON_NAME} xotirasiga`)}`;
+
+    // Havoladagi #tree yoki #place bo'yicha kerakli tabni ochish
+    const initialTab = TABS.indexOf(location.hash.slice(1));
+    if (initialTab > 0) switchTab(initialTab);
   </script>
 </body>
 </html>

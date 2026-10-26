@@ -46,3 +46,6 @@ yarn-error.log*
 
 # Docker
 docker-compose.override.yml
+
+# Claude Code (mahalliy sozlamalar)
+.claude/

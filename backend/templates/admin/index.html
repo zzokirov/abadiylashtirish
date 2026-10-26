@@ -9,15 +9,35 @@
 
 <style>
     :root {
-        --primary: #122C21;
-        --primary-light: #1A3E2F;
-        --accent-gold: #C5A880;
-        --accent-gold-dark: #9E7D52;
-        --bg-admin: #F4F7F5;
+        --ax-primary: #14302A;
+        --ax-primary-light: #1E4A3D;
+        --accent-gold: #B8935A;
+        --accent-gold-dark: #8E6D3C;
+        --bg-admin: #F4F1EA;
         --surface: #FFFFFF;
-        --text: #13221C;
-        --text-muted: #566E62;
-        --border: #DFE7E3;
+        --surface-2: #FAF8F3;
+        --tint: #EEF1EC;
+        --text: #15211C;
+        --text-muted: #5E6C66;
+        --border: rgba(21, 33, 28, 0.10);
+        --border-subtle: rgba(21, 33, 28, 0.07);
+        --on-primary: #FFFFFF;
+        --shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 8px 24px rgba(20, 30, 25, 0.06);
+    }
+    /* Django admin tungi rejimi bilan mos ranglar */
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+            --ax-primary: #8CCBB4; --ax-primary-light: #A9DCC9; --accent-gold: #D2B07C; --accent-gold-dark: #D2B07C;
+            --bg-admin: #0B1512; --surface: #12201B; --surface-2: #172821; --tint: #1B2E27;
+            --text: #EEF2EF; --text-muted: #A3B2AB; --border: rgba(255,255,255,0.09); --border-subtle: rgba(255,255,255,0.06);
+            --on-primary: #0B1512; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 28px rgba(0,0,0,0.35);
+        }
+    }
+    :root[data-theme="dark"] {
+        --ax-primary: #8CCBB4; --ax-primary-light: #A9DCC9; --accent-gold: #D2B07C; --accent-gold-dark: #D2B07C;
+        --bg-admin: #0B1512; --surface: #12201B; --surface-2: #172821; --tint: #1B2E27;
+        --text: #EEF2EF; --text-muted: #A3B2AB; --border: rgba(255,255,255,0.09); --border-subtle: rgba(255,255,255,0.06);
+        --on-primary: #0B1512; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 28px rgba(0,0,0,0.35);
     }
     body {
         font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
@@ -43,7 +63,7 @@
         border-radius: 16px;
         padding: 22px 24px;
         border: 1px solid var(--border);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+        box-shadow: var(--shadow);
         display: flex;
         align-items: center;
         gap: 18px;
@@ -54,23 +74,24 @@
         content: '';
         position: absolute;
         top: 0; left: 0; width: 4px; height: 100%;
-        background: var(--primary);
+        background: var(--ax-primary);
     }
     .kpi-box.gold::before { background: var(--accent-gold); }
     .kpi-icon {
         width: 54px;
         height: 54px;
         border-radius: 14px;
-        background: #EEF4F1;
+        background: var(--tint);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 26px;
+        color: var(--ax-primary);
     }
     .kpi-num {
         font-size: 28px;
         font-weight: 800;
-        color: var(--primary);
+        color: var(--ax-primary);
         line-height: 1.1;
     }
     .kpi-label {
@@ -85,7 +106,7 @@
         background: var(--surface);
         border-radius: 18px;
         border: 1px solid var(--border);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        box-shadow: var(--shadow);
         padding: 28px;
         margin-bottom: 28px;
     }
@@ -100,7 +121,7 @@
     .dashboard-title {
         font-size: 20px;
         font-weight: 700;
-        color: var(--primary);
+        color: var(--ax-primary);
         margin: 0;
     }
     .dashboard-desc {
@@ -129,21 +150,21 @@
         transition: all 0.2s ease;
     }
     .admin-action-btn.primary {
-        background: var(--primary) !important;
-        color: #FFFFFF !important;
+        background: var(--ax-primary) !important;
+        color: var(--on-primary) !important;
         box-shadow: 0 4px 12px rgba(18, 44, 33, 0.2);
     }
     .admin-action-btn.primary:hover {
-        background: var(--primary-light) !important;
+        background: var(--ax-primary-light) !important;
     }
     .admin-action-btn.outline {
-        background: #FFFFFF !important;
+        background: var(--surface) !important;
         border-color: var(--border) !important;
-        color: var(--primary) !important;
+        color: var(--ax-primary) !important;
     }
     .admin-action-btn.outline:hover {
-        background: #F4F8F6 !important;
-        border-color: var(--primary) !important;
+        background: var(--tint) !important;
+        border-color: var(--ax-primary) !important;
     }
 
     /* Search */
@@ -156,11 +177,11 @@
         font-family: inherit;
         outline: none;
         margin-bottom: 20px;
-        background: #FFFFFF;
+        background: var(--surface);
         transition: border-color 0.2s;
     }
     .admin-search-input:focus {
-        border-color: var(--primary);
+        border-color: var(--ax-primary);
         box-shadow: 0 0 0 3px rgba(18, 44, 33, 0.08);
     }
 
@@ -168,19 +189,20 @@
     .table-wrap {
         border: 1px solid var(--border);
         border-radius: 14px;
-        overflow: hidden;
+        overflow-x: auto;
     }
+    .custom-admin-table { min-width: 760px; }
     .custom-admin-table {
         width: 100%;
         border-collapse: collapse;
         text-align: left;
     }
     .custom-admin-table th {
-        background: #F4F8F6;
+        background: var(--surface-2);
         padding: 14px 18px;
         font-size: 12px;
         font-weight: 700;
-        color: var(--primary);
+        color: var(--ax-primary);
         text-transform: uppercase;
         letter-spacing: 0.04em;
         border-bottom: 1px solid var(--border);
@@ -190,10 +212,10 @@
         border-bottom: 1px solid var(--border);
         font-size: 14px;
         vertical-align: middle;
-        background: #FFFFFF;
+        background: var(--surface);
     }
     .custom-admin-table tr:last-child td { border-bottom: none; }
-    .custom-admin-table tr:hover td { background: #FAFCFB; }
+    .custom-admin-table tr:hover td { background: var(--surface-2); }
 
     .person-row-flex {
         display: flex;
@@ -204,18 +226,31 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: var(--primary-light);
-        color: #FFFFFF;
+        background: var(--ax-primary-light);
+        color: var(--on-primary);
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
         font-size: 16px;
         flex-shrink: 0;
+        overflow: hidden;
+    }
+    .person-initial img { width: 100%; height: 100%; object-fit: cover; }
+    .status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; background: #3BA272; vertical-align: middle; }
+    .status-dot.off { background: #B9B9B9; }
+    .open-link { display: inline-flex; align-items: center; gap: 6px; color: var(--ax-primary); font-weight: 700; text-decoration: none; font-size: 13px; padding: 6px 10px; border-radius: 8px; background: var(--tint); }
+    .open-link:hover { background: var(--surface-2); }
+    @media (max-width: 720px) {
+        #content { padding: 16px !important; }
+        .form-split-row { flex-direction: column; gap: 0; }
+        .btn-action-group { width: 100%; }
+        .btn-action-group .admin-action-btn { flex: 1; justify-content: center; }
+        .dashboard-card { padding: 18px; }
     }
     .person-full-txt {
         font-weight: 700;
-        color: var(--primary);
+        color: var(--ax-primary);
         font-size: 14.5px;
     }
 
@@ -225,8 +260,8 @@
         border-radius: 8px;
         font-size: 12px;
         font-weight: 600;
-        background: #EEF4F1;
-        color: var(--primary);
+        background: var(--tint);
+        color: var(--ax-primary);
     }
 
     /* QR Button Group */
@@ -241,14 +276,14 @@
         font-size: 11.5px;
         font-weight: 700;
         text-decoration: none;
-        background: #FFFFFF;
+        background: var(--surface);
         color: var(--text);
         border-right: 1px solid var(--border);
         transition: background 0.15s;
     }
     .qr-badge-btn:last-child { border-right: none; }
-    .qr-badge-btn:hover { background: #EEF4F1; color: var(--primary); }
-    .qr-badge-btn.pdf-type { color: #8C4713; }
+    .qr-badge-btn:hover { background: var(--tint); color: var(--ax-primary); }
+    .qr-badge-btn.pdf-type { color: var(--accent-gold-dark); }
 
     /* Modal Form */
     .modal-backdrop {
@@ -264,7 +299,7 @@
     }
     .modal-backdrop.open { display: flex; }
     .modal-box {
-        background: #FFFFFF;
+        background: var(--surface);
         width: 100%;
         max-width: 600px;
         border-radius: 20px;
@@ -286,7 +321,7 @@
         display: block;
         font-size: 13px;
         font-weight: 700;
-        color: var(--primary);
+        color: var(--ax-primary);
         margin-bottom: 6px;
     }
     .form-control-input, .form-control-select, .form-control-textarea {
@@ -300,7 +335,7 @@
         box-sizing: border-box;
     }
     .form-control-input:focus, .form-control-select:focus, .form-control-textarea:focus {
-        border-color: var(--primary);
+        border-color: var(--ax-primary);
         box-shadow: 0 0 0 3px rgba(18, 44, 33, 0.08);
     }
     .form-split-row {
@@ -325,7 +360,7 @@
     .app-card h3 {
         font-size: 15px;
         font-weight: 700;
-        color: var(--primary);
+        color: var(--ax-primary);
         margin-bottom: 12px;
         display: flex;
         align-items: center;
@@ -349,7 +384,7 @@
     <!-- 1. KPI STATISTIKA KARTALARI -->
     <div class="kpi-container">
         <div class="kpi-box">
-            <div class="kpi-icon">🕊️</div>
+            <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></div>
             <div>
                 <div class="kpi-num">{{ total_deceased }}</div>
                 <div class="kpi-label">Jami Ro‘yxatga Olingan Marhumlar</div>
@@ -357,7 +392,7 @@
         </div>
 
         <div class="kpi-box gold">
-            <div class="kpi-icon">📍</div>
+            <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
             <div>
                 <div class="kpi-num">{{ total_cemeteries }}</div>
                 <div class="kpi-label">Dafn Qilingan Qabristonlar</div>
@@ -365,7 +400,7 @@
         </div>
 
         <div class="kpi-box">
-            <div class="kpi-icon">📱</div>
+            <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg></div>
             <div>
                 <div class="kpi-num">{{ total_published }}</div>
                 <div class="kpi-label">Ommaga Ochiq QR Sahifalar</div>
@@ -385,11 +420,11 @@
 
             <div class="btn-action-group">
                 <button type="button" class="admin-action-btn outline" onclick="openAdminModal('modalRelation')">
-                    <span>🔗</span>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
                     <span>Shajara Bog‘lash</span>
                 </button>
                 <button type="button" class="admin-action-btn primary" onclick="openAdminModal('modalCreate')">
-                    <span>➕</span>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                     <span>Yangi Marhum Qo‘shish</span>
                 </button>
             </div>
@@ -413,20 +448,20 @@
                         <tr>
                             <td>
                                 <div class="person-row-flex">
-                                    <div class="person-initial">{{ p.first_name|first }}</div>
+                                    <div class="person-initial">{% if p.photo %}<img src="{{ p.photo.url }}" alt="">{% else %}{{ p.first_name|first }}{% endif %}</div>
                                     <div>
                                         <div class="person-full-txt">
-                                            <a href="{% url 'admin:core_deceasedperson_change' p.id %}" style="color:var(--primary); text-decoration:none;">
+                                            <a href="{% url 'admin:core_deceasedperson_change' p.id %}" style="color:var(--ax-primary); text-decoration:none;">
                                                 {{ p.full_name }}
                                             </a>
                                         </div>
-                                        <div style="font-size: 11px; color: var(--text-muted);">{{ p.get_gender_display }}</div>
+                                        <div style="font-size: 11.5px; color: var(--text-muted);"><span class="status-dot{% if not p.is_published or p.is_archived %} off{% endif %}"></span>{% if p.is_published and not p.is_archived %}Ommaga ochiq{% else %}Yopiq{% endif %} · {{ p.get_gender_display }}</div>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="badge-soft">
-                                    📅 {{ p.birth_date|date:"Y"|default:"?" }} — {{ p.death_date|date:"Y" }}
+                                    {{ p.birth_date|date:"Y"|default:"?" }} — {{ p.death_date|date:"Y" }}
                                 </span>
                             </td>
                             <td>
@@ -434,15 +469,13 @@
                                 <div style="font-size: 12px; color: var(--text-muted);">{{ p.grave_number|default:"Qabr № yo'q" }}</div>
                             </td>
                             <td>
-                                <a href="{{ public_base_url }}/{{ p.qr_record.public_token }}/" target="_blank" style="color: var(--primary); font-weight: 700; text-decoration: none; font-size: 13px;">
-                                    📱 Ochish ↗
-                                </a>
+                                <a href="{{ public_base_url }}/{{ p.qr_record.public_token }}/" target="_blank" class="open-link">Sahifani ochish ↗</a>
                             </td>
                             <td style="text-align: right;">
                                 <div class="qr-badge-group">
                                     <a href="{% url 'qr:download_qr' p.qr_record.public_token 'png' %}" target="_blank" class="qr-badge-btn" title="300+ DPI Monoxrom PNG">PNG</a>
                                     <a href="{% url 'qr:download_qr' p.qr_record.public_token 'svg' %}" target="_blank" class="qr-badge-btn" title="Lazer stanogi uchun vektor">SVG</a>
-                                    <a href="{% url 'qr:download_qr' p.qr_record.public_token 'pdf' %}" target="_blank" class="qr-badge-btn pdf-type" title="A4 formatdagi o‘yma andoza">📄 PDF</a>
+                                    <a href="{% url 'qr:download_qr' p.qr_record.public_token 'pdf' %}" target="_blank" class="qr-badge-btn pdf-type" title="A4 formatdagi o‘yma andoza">PDF</a>
                                 </div>
                             </td>
                         </tr>
@@ -460,40 +493,40 @@
 
     <!-- 3. DJANGO MODULLAR RO'YXATI (Qo'shimcha boshqaruv uchun) -->
     <div class="dashboard-card" style="padding: 22px;">
-        <h3 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 14px;">
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--ax-primary); margin-bottom: 14px;">
             ⚙️ Tizim Ma’lumotlar Bazasi Modullari
         </h3>
         <div class="django-apps-grid">
             <div class="app-card">
                 <h3><span>🗂️</span> Qabriston va Shajara Tizimi</h3>
                 <div class="app-model-row">
-                    <a href="{% url 'admin:core_deceasedperson_changelist' %}" style="color:var(--primary); font-weight:600; text-decoration:none;">Marhumlar</a>
+                    <a href="{% url 'admin:core_deceasedperson_changelist' %}" style="color:var(--ax-primary); font-weight:600; text-decoration:none;">Marhumlar</a>
                     <a href="{% url 'admin:core_deceasedperson_add' %}" style="font-size:12px; font-weight:700; color:var(--accent-gold-dark);">+ Qo‘shish</a>
                 </div>
                 <div class="app-model-row">
-                    <a href="{% url 'admin:core_cemetery_changelist' %}" style="color:var(--primary); font-weight:600; text-decoration:none;">Qabristonlar</a>
+                    <a href="{% url 'admin:core_cemetery_changelist' %}" style="color:var(--ax-primary); font-weight:600; text-decoration:none;">Qabristonlar</a>
                     <a href="{% url 'admin:core_cemetery_add' %}" style="font-size:12px; font-weight:700; color:var(--accent-gold-dark);">+ Qo‘shish</a>
                 </div>
                 <div class="app-model-row">
-                    <a href="{% url 'admin:core_familyrelationship_changelist' %}" style="color:var(--primary); font-weight:600; text-decoration:none;">Qarindoshlik aloqalari</a>
+                    <a href="{% url 'admin:core_familyrelationship_changelist' %}" style="color:var(--ax-primary); font-weight:600; text-decoration:none;">Qarindoshlik aloqalari</a>
                     <a href="{% url 'admin:core_familyrelationship_add' %}" style="font-size:12px; font-weight:700; color:var(--accent-gold-dark);">+ Qo‘shish</a>
                 </div>
                 <div class="app-model-row">
-                    <a href="{% url 'admin:core_qrcoderecord_changelist' %}" style="color:var(--primary); font-weight:600; text-decoration:none;">Doimiy QR-kod yozuvlari</a>
+                    <a href="{% url 'admin:core_qrcoderecord_changelist' %}" style="color:var(--ax-primary); font-weight:600; text-decoration:none;">Doimiy QR-kod yozuvlari</a>
                 </div>
                 <div class="app-model-row">
-                    <a href="{% url 'admin:core_auditlog_changelist' %}" style="color:var(--primary); font-weight:600; text-decoration:none;">Audit va xavfsizlik jurnali</a>
+                    <a href="{% url 'admin:core_auditlog_changelist' %}" style="color:var(--ax-primary); font-weight:600; text-decoration:none;">Audit va xavfsizlik jurnali</a>
                 </div>
             </div>
 
             <div class="app-card">
                 <h3><span>👥</span> Foydalanuvchilar va Xavfsizlik</h3>
                 <div class="app-model-row">
-                    <a href="{% url 'admin:auth_user_changelist' %}" style="color:var(--primary); font-weight:600; text-decoration:none;">Foydalanuvchilar (Adminlar)</a>
+                    <a href="{% url 'admin:auth_user_changelist' %}" style="color:var(--ax-primary); font-weight:600; text-decoration:none;">Foydalanuvchilar (Adminlar)</a>
                     <a href="{% url 'admin:auth_user_add' %}" style="font-size:12px; font-weight:700; color:var(--accent-gold-dark);">+ Qo‘shish</a>
                 </div>
                 <div class="app-model-row">
-                    <a href="{% url 'admin:auth_group_changelist' %}" style="color:var(--primary); font-weight:600; text-decoration:none;">Guruhlar va huquqlar</a>
+                    <a href="{% url 'admin:auth_group_changelist' %}" style="color:var(--ax-primary); font-weight:600; text-decoration:none;">Guruhlar va huquqlar</a>
                     <a href="{% url 'admin:auth_group_add' %}" style="font-size:12px; font-weight:700; color:var(--accent-gold-dark);">+ Qo‘shish</a>
                 </div>
             </div>
@@ -506,7 +539,7 @@
 <div class="modal-backdrop" id="modalCreate">
     <div class="modal-box">
         <div class="modal-head">
-            <h3 style="font-size: 18px; color: var(--primary); font-weight: 700; margin: 0;">➕ Yangi Marhum Kiritish</h3>
+            <h3 style="font-size: 18px; color: var(--ax-primary); font-weight: 700; margin: 0;">Yangi marhum kiritish</h3>
             <button type="button" onclick="closeAdminModal('modalCreate')" style="border:none; background:none; font-size:22px; cursor:pointer;">✕</button>
         </div>
 
@@ -578,7 +611,7 @@
 <div class="modal-backdrop" id="modalRelation">
     <div class="modal-box" style="max-width: 500px;">
         <div class="modal-head">
-            <h3 style="font-size: 18px; color: var(--primary); font-weight: 700; margin: 0;">🔗 Shajara Zanjirini Biriktirish</h3>
+            <h3 style="font-size: 18px; color: var(--ax-primary); font-weight: 700; margin: 0;">Shajara aloqasini biriktirish</h3>
             <button type="button" onclick="closeAdminModal('modalRelation')" style="border:none; background:none; font-size:22px; cursor:pointer;">✕</button>
         </div>
 
@@ -612,7 +645,7 @@
                 </select>
             </div>
 
-            <div style="background: #EAF2EE; border-radius: 10px; padding: 12px 14px; font-size: 12.5px; color: var(--primary); margin-bottom: 18px;">
+            <div style="background: var(--tint); border-radius: 10px; padding: 12px 14px; font-size: 12.5px; color: var(--ax-primary); margin-bottom: 18px;">
                 💡 <b>DAG Cheklovi:</b> Tizim ajdodlar o‘rtasida cheksiz aylanma zanjir hosil bo‘lishini avtomatik bloklaydi.
             </div>
 

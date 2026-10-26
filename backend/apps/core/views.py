@@ -140,7 +140,23 @@ class MemorialPageView(View):
     @method_decorator(never_cache)
     def get(self, request, token: str):
         person = get_object_or_404(published_persons(), qr_record__public_token=token)
-        return apply_no_cache(render(request, 'memorial.html', {'token': token, 'person': person}))
+        return apply_no_cache(render(request, 'memorial.html', {
+            'token': token,
+            'person': person,
+            'map': cemetery_map_context(person.cemetery),
+        }))
+
+
+def cemetery_map_context(cemetery):
+    """Xarita havolalari uchun nuqtali (lokalizatsiyasiz) koordinatalar."""
+    if not cemetery or cemetery.latitude is None or cemetery.longitude is None:
+        return None
+    lat, lon = float(cemetery.latitude), float(cemetery.longitude)
+    return {
+        'lat': f"{lat:.6f}",
+        'lon': f"{lon:.6f}",
+        'bbox': f"{lon - 0.006:.6f},{lat - 0.004:.6f},{lon + 0.006:.6f},{lat + 0.004:.6f}",
+    }
 
 
 class PublicDeceasedDetailView(APIView):

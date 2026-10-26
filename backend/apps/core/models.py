@@ -162,6 +162,14 @@ class DeceasedPerson(models.Model):
             parts.append(self.middle_name)
         return " ".join(parts)
 
+    @property
+    def age_at_death(self):
+        """Necha yil umr ko'rgani (tug'ilgan sana noma'lum bo'lsa None)."""
+        if not (self.birth_date and self.death_date):
+            return None
+        b, d = self.birth_date, self.death_date
+        return d.year - b.year - ((d.month, d.day) < (b.month, b.day))
+
     def clean(self):
         super().clean()
         today = timezone.now().date()
