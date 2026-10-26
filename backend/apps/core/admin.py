@@ -56,13 +56,15 @@ class DeceasedPersonAdmin(admin.ModelAdmin):
     list_filter = ['cemetery', 'gender', 'is_published', 'is_archived', 'death_date']
     search_fields = ['last_name', 'first_name', 'middle_name', 'grave_number', 'qr_record__public_token']
     inlines = [ParentRelationshipInline, ChildRelationshipInline]
+    radio_fields = {'photo_shape': admin.HORIZONTAL}
     readonly_fields = ['qr_preview_display', 'public_page_link', 'created_at', 'updated_at']
 
     fieldsets = (
         ("Asosiy Ma’lumotlar", {
             'fields': (
                 ('last_name', 'first_name', 'middle_name'),
-                ('gender', 'photo'),
+                'gender',
+                ('photo', 'photo_shape'),
                 ('birth_date', 'death_date'),
             )
         }),

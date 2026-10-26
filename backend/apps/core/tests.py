@@ -343,3 +343,49 @@ class QRExportTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('no-store', response['Cache-Control'])
         self.assertNotContains(response, "<&>")
+
+
+class PhotoShapeTestCase(TestCase):
+    def setUp(self):
+        self.admin_user = get_user_model().objects.create_superuser('boss', 'boss@example.com', 'test-pass-12345')
+        self.client.force_login(self.admin_user)
+
+    def _image_file(self, name='rasm.png'):
+        import io
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        buf = io.BytesIO()
+        Image.new('RGB', (40, 50), (90, 120, 100)).save(buf, format='PNG')
+        return SimpleUploadedFile(name, buf.getvalue(), content_type='image/png')
+
+    def test_quick_create_saves_photo_and_rect_shape(self):
+        import shutil
+        import tempfile
+        media = tempfile.mkdtemp()
+        try:
+            with self.settings(MEDIA_ROOT=media):
+                self.client.post(reverse('admin-quick-create-deceased'), {
+                    'first_name': 'Rasmli', 'last_name': 'Test', 'death_date': '2020-01-01',
+                    'photo_shape': 'RECT', 'photo': self._image_file(),
+                })
+                person = DeceasedPerson.objects.get(first_name='Rasmli')
+                self.assertTrue(person.photo)
+                self.assertEqual(person.photo_shape, DeceasedPerson.PHOTO_SHAPE_RECT)
+
+                response = self.client.get(reverse('memorial-web-view', kwargs={'token': person.qr_record.public_token}))
+                self.assertContains(response, 'class="portrait rect"')
+        finally:
+            shutil.rmtree(media, ignore_errors=True)
+
+    def test_quick_create_rejects_non_image(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        fake = SimpleUploadedFile('virus.png', b'bu rasm emas', content_type='image/png')
+        self.client.post(reverse('admin-quick-create-deceased'), {
+            'first_name': 'Soxta', 'last_name': 'Test', 'death_date': '2020-01-01', 'photo': fake,
+        })
+        self.assertFalse(DeceasedPerson.objects.filter(first_name='Soxta').exists())
+
+    def test_default_shape_is_circle(self):
+        person = DeceasedPerson.objects.create(first_name="Ali", last_name="Valiyev", death_date=datetime.date(2020, 1, 1))
+        response = self.client.get(reverse('memorial-web-view', kwargs={'token': person.qr_record.public_token}))
+        self.assertContains(response, 'class="portrait"')

@@ -109,6 +109,18 @@ class DeceasedPerson(models.Model):
         blank=True,
         verbose_name="Fotosurati"
     )
+    PHOTO_SHAPE_CIRCLE = 'CIRCLE'
+    PHOTO_SHAPE_RECT = 'RECT'
+    PHOTO_SHAPE_CHOICES = [
+        (PHOTO_SHAPE_CIRCLE, 'Dumaloq'),
+        (PHOTO_SHAPE_RECT, 'To‘rtburchak (portret)'),
+    ]
+    photo_shape = models.CharField(
+        max_length=10,
+        choices=PHOTO_SHAPE_CHOICES,
+        default=PHOTO_SHAPE_CIRCLE,
+        verbose_name="Rasm ko‘rinishi"
+    )
     biography = models.TextField(
         blank=True,
         verbose_name="Tarjimai holi va ibratli xotiralari"

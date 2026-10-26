@@ -113,6 +113,9 @@
       background: linear-gradient(140deg, #2A5E4E, #10251F); border: 3px solid rgba(12, 28, 23, 0.9);
       font-size: 54px; color: #F2E4C7;
     }
+    /* To'rtburchak (portret) ramka — qabr toshidagi surat uslubida */
+    .portrait.rect { width: 156px; height: 200px; border-radius: 20px; }
+    .portrait.rect img, .portrait.rect .initial { border-radius: 16px; }
     .eyebrow { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(242, 228, 199, 0.8); margin-bottom: 8px; }
     .name { font-size: clamp(30px, 8vw, 40px); font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; text-wrap: balance; }
     .dates { margin-top: 12px; display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; font-size: 14.5px; color: rgba(255,255,255,0.82); }
@@ -287,7 +290,7 @@
         <button class="icon-btn" type="button" onclick="shareMemorial()" aria-label="Ulashish"><svg width="19" height="19"><use href="#i-share"/></svg></button>
       </div>
 
-      <div class="portrait">
+      <div class="portrait{% if person.photo_shape == 'RECT' %} rect{% endif %}">
         {% if person.photo %}
           <img src="{{ person.photo.url }}" alt="{{ person.full_name }}" />
         {% else %}

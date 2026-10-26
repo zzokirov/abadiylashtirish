@@ -375,6 +375,26 @@
         font-size: 13.5px;
     }
     .app-model-row:last-child { border-bottom: none; }
+    /* Rasm tanlash */
+    .photo-picker { display: flex; gap: 16px; align-items: flex-start; }
+    .photo-preview {
+        width: 84px; height: 84px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden;
+        background: var(--tint); border: 2px solid var(--accent-gold); color: var(--text-muted); font-size: 12px; font-weight: 600;
+        transition: border-radius .25s, height .25s;
+    }
+    .photo-preview.shape-CIRCLE { border-radius: 50%; }
+    .photo-preview.shape-RECT { border-radius: 12px; height: 108px; }
+    .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .shape-options { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .shape-option {
+        display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; cursor: pointer;
+        border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text);
+    }
+    .shape-option:has(input:checked) { border-color: var(--ax-primary); background: var(--tint); }
+    .shape-option input { accent-color: var(--ax-primary); margin: 0; }
+    .shape-icon { display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; }
+    .shape-icon.circle { border-radius: 50%; }
+    .shape-icon.rect { width: 12px; height: 16px; border-radius: 3px; }
 </style>
 {% endblock %}
 
@@ -543,8 +563,28 @@
             <button type="button" onclick="closeAdminModal('modalCreate')" style="border:none; background:none; font-size:22px; cursor:pointer;">✕</button>
         </div>
 
-        <form method="POST" action="{% url 'admin-quick-create-deceased' %}">
+        <form method="POST" action="{% url 'admin-quick-create-deceased' %}" enctype="multipart/form-data">
             {% csrf_token %}
+            <div class="form-group-item photo-picker">
+                <div class="photo-preview shape-CIRCLE" id="photoPreview">
+                    <span id="photoPreviewEmpty">Rasm</span>
+                    <img id="photoPreviewImg" alt="" hidden>
+                </div>
+                <div style="flex:1; min-width:0;">
+                    <label class="form-label-txt">Fotosurati</label>
+                    <input type="file" name="photo" accept="image/*" class="form-control-input" onchange="previewPhoto(this)" />
+                    <div class="shape-options">
+                        <label class="shape-option">
+                            <input type="radio" name="photo_shape" value="CIRCLE" checked onchange="setPreviewShape(this.value)">
+                            <span class="shape-icon circle"></span>Dumaloq
+                        </label>
+                        <label class="shape-option">
+                            <input type="radio" name="photo_shape" value="RECT" onchange="setPreviewShape(this.value)">
+                            <span class="shape-icon rect"></span>To‘rtburchak
+                        </label>
+                    </div>
+                </div>
+            </div>
             <div class="form-split-row">
                 <div class="form-group-item">
                     <label class="form-label-txt">Familiyasi *</label>
@@ -669,6 +709,20 @@
             document.querySelectorAll('.open').forEach(el => el.classList.remove('open'));
         }
     });
+
+    function previewPhoto(input) {
+        const img = document.getElementById('photoPreviewImg');
+        const empty = document.getElementById('photoPreviewEmpty');
+        const file = input.files && input.files[0];
+        if (!file) { img.hidden = true; empty.hidden = false; return; }
+        img.src = URL.createObjectURL(file);
+        img.hidden = false;
+        empty.hidden = true;
+    }
+
+    function setPreviewShape(shape) {
+        document.getElementById('photoPreview').className = `photo-preview shape-${shape}`;
+    }
 
     function filterAdminTable() {
         const q = document.getElementById('adminTableSearch').value.toLowerCase();

@@ -6,6 +6,7 @@ Complies with:
 - Full DAG integrity verification.
 """
 
+from django import forms
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import ValidationError
@@ -67,6 +68,15 @@ class AdminCreateDeceasedAction(View):
 
     def post(self, request):
         cemetery_id = request.POST.get('cemetery_id') or None
+        photo = request.FILES.get('photo')
+        if photo:
+            try:
+                # Fayl haqiqatan rasm ekanini tekshirish (Pillow orqali)
+                forms.ImageField().clean(photo)
+            except ValidationError:
+                messages.error(request, "Marhum qo‘shilmadi: yuklangan fayl rasm emas yoki buzilgan.")
+                return redirect('admin:index')
+
         person = DeceasedPerson(
             first_name=request.POST.get('first_name', '').strip(),
             last_name=request.POST.get('last_name', '').strip(),
@@ -74,6 +84,8 @@ class AdminCreateDeceasedAction(View):
             birth_date=request.POST.get('birth_date') or None,
             death_date=request.POST.get('death_date') or None,
             gender=request.POST.get('gender', DeceasedPerson.GENDER_MALE),
+            photo=photo,
+            photo_shape=request.POST.get('photo_shape', DeceasedPerson.PHOTO_SHAPE_CIRCLE),
             cemetery=Cemetery.objects.filter(pk=cemetery_id).first() if cemetery_id else None,
             grave_number=request.POST.get('grave_number', '').strip(),
             biography=request.POST.get('biography', '').strip(),
