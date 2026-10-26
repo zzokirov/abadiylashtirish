@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 0;">
+    <span style="font-size: 24px;">🕊️</span>
+    <div>
+        <h1 id="site-name" style="margin: 0; font-size: 20px; font-weight: 700; color: #FFFFFF;">
+            <a href="{% url 'admin:index' %}" style="color: #FFFFFF; text-decoration: none;">Abadiy Xotira</a>
+        </h1>
+        <div style="font-size: 11px; color: #C5A880; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
+            Elektron Shajara va Qabriston Axborot Tizimi
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --primary: #122C21;
+        --secondary: #1A3E2F;
+        --accent: #C5A880;
+        --primary-fg: #FFFFFF;
+        --header-bg: #122C21;
+        --header-color: #FFFFFF;
+        --header-link-color: #E8DBC9;
+        --breadcrumbs-bg: #F4F7F5;
+        --breadcrumbs-link-fg: #122C21;
+    }
+    #header {
+        background: #122C21 !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    #header a:link, #header a:visited {
+        color: #E8DBC9 !important;
+    }
+    #header a:hover {
+        color: #FFFFFF !important;
+    }
+    div.breadcrumbs {
+        background: #EEF4F1 !important;
+        color: #122C21 !important;
+        border-bottom: 1px solid #DFE7E3;
+    }
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: #122C21 !important;
+        border-radius: 8px !important;
+        color: #FFFFFF !important;
+    }
+    .button:hover, input[type=submit]:hover, input[type=button]:hover {
+        background: #1A3E2F !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#132a22" />
+  <title>{{ person.full_name }} — Abadiy Xotira</title>
+
+  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-dark: #10241D;
+      --primary: #18382B;
+      --primary-light: #24523F;
+      --accent-gold: #C5A880;
+      --accent-gold-light: #E8D8C3;
+      --accent-gold-dark: #9A7B54;
+      --bg-cream: #F8FAF9;
+      --surface-white: #FFFFFF;
+      --text-main: #1A2621;
+      --text-muted: #5A6D64;
+      --border-subtle: #E3E9E6;
+      --shadow-sm: 0 2px 8px rgba(16, 36, 29, 0.04);
+      --shadow-md: 0 8px 24px rgba(16, 36, 29, 0.08);
+      --shadow-lg: 0 16px 40px rgba(16, 36, 29, 0.16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background-color: var(--bg-cream);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    /* Container */
+    .app-container {
+      max-width: 680px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #FFFFFF;
+      box-shadow: 0 0 50px rgba(0,0,0,0.06);
+      position: relative;
+      padding-bottom: 70px;
+    }
+
+    /* Hero Header */
+    .hero-header {
+      background: linear-gradient(165deg, #10241D 0%, #1A3E30 60%, #122B22 100%);
+      color: #FFFFFF;
+      padding: 42px 24px 34px;
+      text-align: center;
+      position: relative;
+      border-bottom-left-radius: 36px;
+      border-bottom-right-radius: 36px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .hero-pattern {
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(197, 168, 128, 0.16) 0%, rgba(24, 56, 43, 0) 70%);
+      pointer-events: none;
+    }
+    .hero-pattern-2 {
+      position: absolute;
+      bottom: -60px;
+      left: -60px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(197, 168, 128, 0.1) 0%, rgba(24, 56, 43, 0) 70%);
+      pointer-events: none;
+    }
+
+    /* Avatar */
+    .avatar-wrapper {
+      position: relative;
+      width: 124px;
+      height: 124px;
+      margin: 0 auto 16px;
+    }
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3.5px solid var(--accent-gold);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.4);
+      background-color: var(--primary-light);
+    }
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 3.5px solid var(--accent-gold);
+      background: linear-gradient(135deg, #24523F 0%, #132A22 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      color: var(--accent-gold-light);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.4);
+    }
+
+    .person-name {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .person-years {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent-gold-light);
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+
+    /* Badges */
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .badge-gold {
+      background: rgba(197, 168, 128, 0.22);
+      border-color: rgba(197, 168, 128, 0.45);
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    .map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 7px 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(197, 168, 128, 0.5);
+      color: var(--accent-gold-light);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .map-btn:hover {
+      background: rgba(197, 168, 128, 0.15);
+      border-color: var(--accent-gold);
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      margin: -20px 20px 24px;
+      background: var(--surface-white);
+      padding: 6px;
+      border-radius: 18px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      z-index: 10;
+      border: 1px solid var(--border-subtle);
+    }
+    .tab-item {
+      flex: 1;
+      padding: 12px 14px;
+      text-align: center;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 14px;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      user-select: none;
+    }
+    .tab-item.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(24, 56, 43, 0.22);
+    }
+
+    /* Content Cards */
+    .section-content {
+      padding: 0 20px;
+    }
+    .card-box {
+      background: var(--surface-white);
+      border-radius: 24px;
+      padding: 26px 22px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 14px 0 18px;
+    }
+
+    .bio-text {
+      font-size: 15.5px;
+      line-height: 1.85;
+      color: #31423B;
+      white-space: pre-line;
+    }
+
+    /* Duoyi Xayr Bloki */
+    .prayer-banner {
+      background: linear-gradient(135deg, #F3F7F5 0%, #EBF2EE 100%);
+      border-left: 4px solid var(--accent-gold);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .prayer-text {
+      font-size: 19px;
+      font-style: italic;
+      color: var(--primary-dark);
+      line-height: 1.5;
+    }
+
+    /* Tree View */
+    .tree-scroll-container {
+      overflow-x: auto;
+      padding: 10px 0 30px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tree-wrapper {
+      min-width: 580px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tree-section-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .label-ancestors { background: #EAF0EC; color: var(--primary); }
+    .label-focal { background: var(--primary); color: var(--accent-gold-light); }
+    .label-descendants { background: #EAF0EC; color: var(--primary); }
+
+    /* Node Card */
+    .person-card {
+      width: 195px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      text-align: left;
+      position: relative;
+    }
+    .person-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+    .person-card.focal-card {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: 2.5px solid var(--accent-gold);
+      box-shadow: 0 8px 24px rgba(24, 56, 43, 0.25);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .focal-card .card-avatar {
+      background: var(--accent-gold);
+      color: var(--primary-dark);
+    }
+
+    .card-relation {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+    .focal-card .card-relation { color: var(--accent-gold-light); }
+
+    .card-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.25;
+    }
+
+    .card-years {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+    .focal-card .card-years { color: var(--accent-gold-light); }
+
+    .expand-chip {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid #EEF3F0;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .focal-card .expand-chip {
+      border-top-color: rgba(255,255,255,0.15);
+      color: #FFFFFF;
+    }
+
+    /* Connectors */
+    .tree-line-v {
+      width: 2px;
+      height: 24px;
+      background: var(--accent-gold);
+      margin: 4px auto;
+    }
+
+    /* Modal Sheet */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(16, 36, 29, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-sheet {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 540px;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding: 24px 22px 34px;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.25);
+      max-height: 85vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-overlay.open .modal-sheet {
+      transform: translateY(0);
+    }
+    .drag-handle {
+      width: 42px;
+      height: 4.5px;
+      background: #D8DFDB;
+      border-radius: 3px;
+      margin: 0 auto 18px;
+    }
+
+    /* Buttons */
+    .action-btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #18382B 0%, #24523F 100%);
+      color: #FFFFFF;
+      text-align: center;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      margin-top: 18px;
+      box-shadow: 0 4px 16px rgba(24, 56, 43, 0.25);
+    }
+
+    /* Share Footer */
+    .footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-subtle);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      z-index: 50;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .footer-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border: 1px solid var(--border-subtle);
+      background: #FFFFFF;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .footer-btn.primary {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+    /* Shajara: ajdodlar va avlodlar joylashuvi */
+    .ancestors-wrap {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      align-items: flex-end;
+      margin-bottom: 8px;
+    }
+    .ancestor-branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .ancestor-row {
+      display: flex;
+      gap: 10px;
+    }
+    .descendant-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .descendant-children {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-left: 12px;
+      border-left: 2px dashed var(--accent-gold);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- 1. HERO HEADER -->
+    <header class="hero-header">
+      <div class="hero-pattern"></div>
+      <div class="hero-pattern-2"></div>
+
+      <div class="avatar-wrapper">
+        {% if person.photo %}
+          <img src="{{ person.photo.url }}" alt="{{ person.full_name }}" class="avatar-img" />
+        {% else %}
+          <div class="avatar-placeholder serif">{{ person.first_name|first }}</div>
+        {% endif %}
+      </div>
+
+      <h1 class="person-name serif">{{ person.full_name }}</h1>
+      <div class="person-years">
+        <span>📅</span>
+        <span>{{ person.birth_date|date:"Y"|default:"?" }} — {{ person.death_date|date:"Y" }}</span>
+      </div>
+
+      <div class="badge-group">
+        {% if person.cemetery %}
+          <div class="badge">📍 {{ person.cemetery.name }}</div>
+        {% endif %}
+        {% if person.grave_number %}
+          <div class="badge badge-gold">Qabr № {{ person.grave_number }}</div>
+        {% endif %}
+      </div>
+
+      {% if person.cemetery.latitude and person.cemetery.longitude %}
+        <div>
+          <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query={{ person.cemetery.latitude }},{{ person.cemetery.longitude }}" target="_blank">
+            🗺️ Qabristonni xaritadan ochish ↗
+          </a>
+        </div>
+      {% endif %}
+    </header>
+
+    <!-- 2. NAVIGATION TABS -->
+    <nav class="tabs-nav">
+      <div class="tab-item active" id="tab-bio-btn" onclick="switchTab('bio')">
+        <span>📖</span>
+        <span>Tarjimai holi</span>
+      </div>
+      <div class="tab-item" id="tab-tree-btn" onclick="switchTab('tree')">
+        <span>🌳</span>
+        <span>Elektron Shajara</span>
+      </div>
+    </nav>
+
+    <!-- 3. TAB 1: TARJIMAI HOL -->
+    <main class="section-content" id="tab-bio-content">
+      <div class="card-box">
+        <h2 class="card-title serif">
+          <span>🕊️</span>
+          <span>Hayot Yo‘li va Xotiralar</span>
+        </h2>
+        <div class="divider"></div>
+
+        <p class="bio-text">
+          {% if person.biography %}
+            {{ person.biography|linebreaksbr }}
+          {% else %}
+            Ushbu marhum haqida tarjimai hol ma’lumotlari hali kiritilmagan.
+          {% endif %}
+        </p>
+
+        <div class="prayer-banner">
+          <p class="prayer-text serif">
+            «Oxiratlari obod, joylari jannatda bo‘lsin. Qoldirgan yaxshi nomlari va xayrli amallari abadiy yashasin.»
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- 4. TAB 2: ELEKTRON SHAJARA -->
+    <main class="section-content" id="tab-tree-content" style="display: none;">
+      <div class="card-box" style="padding: 20px 14px;">
+        <div style="text-align: center; margin-bottom: 12px;">
+          <p style="font-size: 13px; color: var(--text-muted);">
+            💡 Har qanday shaxs ustiga bosib uning qabri va shajarasiga o‘tishingiz mumkin
+          </p>
+        </div>
+
+        <div class="tree-scroll-container">
+          <div class="tree-wrapper" id="tree-root">
+            <div style="padding: 30px; color: var(--text-muted); font-size: 14px;">
+              Shajara yuklanmoqda...
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 5. BOTTOM BAR (SHARE ONLY) -->
+    <div class="footer-bar">
+      <button class="footer-btn" onclick="shareMemorial()">
+        <span>🔗</span>
+        <span>Ushbu Xotira Sahifasini Ulashish</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- MODAL BOTTOM SHEET -->
+  <div class="modal-overlay" id="modal-sheet" onclick="closeModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="drag-handle"></div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <span style="font-size: 11px; font-weight: 700; color: var(--accent-gold-dark); text-transform: uppercase; letter-spacing: 0.06em;" id="m-relation">Qarindoshlik</span>
+        <button onclick="closeModal()" style="border: none; background: none; font-size: 20px; color: #888; cursor: pointer;">✕</button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+        <div class="card-avatar" style="width: 56px; height: 56px; font-size: 22px;" id="m-avatar">🕊️</div>
+        <div>
+          <h3 style="font-size: 18px; font-weight: 700; color: var(--primary);" id="m-name">—</h3>
+          <p style="font-size: 13px; color: var(--text-muted); font-weight: 500;" id="m-years">—</p>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;" id="m-badges"></div>
+
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px; margin-bottom: 16px;">
+        <h4 style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Tarjimai holi:</h4>
+        <p style="font-size: 14px; line-height: 1.7; color: #3A4C44;" id="m-bio">—</p>
+      </div>
+
+      <a id="m-navigate-btn" class="action-btn" href="#" style="display: none;">
+        🌳 Ushbu marhum shajarasiga o‘tish
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const TOKEN = "{{ token|escapejs }}";
+    const PERSON_NAME = "{{ person.full_name|escapejs }}";
+    let treeData = null;
+    let expandedMap = {};
+    // Kartochkalar ma'lumoti shu ro'yxatda saqlanadi (onclick ichiga JSON qo'yish
+    // O'ktam, G'ulom kabi apostrofli ismlarda sahifani buzardi)
+    let nodeRegistry = [];
+
+    const DESCENDANT_LABELS = ["Farzandi", "Nabirasi", "Chevarasi", "Evarasi"];
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function switchTab(tab) {
+      const isBio = tab === 'bio';
+      document.getElementById('tab-bio-btn').classList.toggle('active', isBio);
+      document.getElementById('tab-tree-btn').classList.toggle('active', !isBio);
+      document.getElementById('tab-bio-content').style.display = isBio ? 'block' : 'none';
+      document.getElementById('tab-tree-content').style.display = isBio ? 'none' : 'block';
+      if (!isBio && !treeData) loadTree();
+    }
+
+    async function loadTree() {
+      const root = document.getElementById('tree-root');
+      try {
+        const res = await fetch(`/api/v1/public/deceased/${encodeURIComponent(TOKEN)}/tree/?_t=${Date.now()}`, {
+          cache: 'no-store',
+        });
+        if (!res.ok) throw new Error("Shajara topilmadi");
+        treeData = await res.json();
+        renderTree();
+      } catch (err) {
+        root.innerHTML = `
+          <div style="padding: 24px; text-align: center;">
+            <p style="color:#c00; margin-bottom: 12px;">Shajarani yuklashda xatolik yuz berdi.</p>
+            <button class="expand-chip" style="display:inline-block;" onclick="loadTree()">Qayta urinish ↻</button>
+          </div>`;
+      }
+    }
+
+    function emptyNote(text) {
+      return `<div style="font-size:12px; color:#888; font-style:italic; padding:16px;">${escapeHtml(text)}</div>`;
+    }
+
+    // Ota yoki ona va ularning ota-onasi (bobo va buvi) — yuqoridan pastga
+    function renderAncestorBranch(parent, parentLabel, sideLabel, missingText) {
+      if (!parent) return `<div class="ancestor-branch">${emptyNote(missingText)}</div>`;
+
+      let html = `<div class="ancestor-branch">`;
+      if (parent.father || parent.mother) {
+        html += `<div class="ancestor-row">`;
+        html += renderPersonCard(parent.father, `Bobosi (${sideLabel})`);
+        html += renderPersonCard(parent.mother, `Buvisi (${sideLabel})`);
+        html += `</div>`;
+        html += `<div class="tree-line-v" style="height: 14px;"></div>`;
+      }
+      html += renderPersonCard(parent, parentLabel);
+      html += `</div>`;
+      return html;
+    }
+
+    function renderDescendants(children, depth) {
+      const label = DESCENDANT_LABELS[Math.min(depth, DESCENDANT_LABELS.length - 1)];
+      let html = '';
+      children.forEach(child => {
+        const grandChildren = child.children || [];
+        const isExp = !!expandedMap[child.id];
+
+        html += `<div class="descendant-item">`;
+        html += renderPersonCard(child, label, false, grandChildren.length, isExp);
+        if (grandChildren.length > 0 && isExp) {
+          html += `<div class="descendant-children">`;
+          html += renderDescendants(grandChildren, depth + 1);
+          html += `</div>`;
+        }
+        html += `</div>`;
+      });
+      return html;
+    }
+
+    function renderTree() {
+      if (!treeData) return;
+      nodeRegistry = [];
+      let html = '';
+
+      // 1. AJDODLAR
+      html += `<div class="tree-section-label label-ancestors">Ajdodlari (Ota va Ona tomon)</div>`;
+      html += `<div class="ancestors-wrap">`;
+      html += renderAncestorBranch(treeData.paternal_ancestors, "Otasi", "ota tomon", "Otasi kiritilmagan");
+      html += renderAncestorBranch(treeData.maternal_ancestors, "Onasi", "ona tomon", "Onasi kiritilmagan");
+      html += `</div>`;
+
+      html += `<div class="tree-line-v" style="height: 24px; background: var(--primary);"></div>`;
+
+      // 2. MARKAZIY MARHUM VA TURMUSH O'RTOG'I
+      html += `<div class="tree-section-label label-focal">Markaziy Marhum</div>`;
+      html += `<div style="display: flex; gap: 18px; align-items: center; justify-content: center; flex-wrap: wrap;">`;
+      html += renderPersonCard(treeData.focal_person, "Asosiy Marhum", true);
+      (treeData.spouses || []).forEach(sp => {
+        html += `<span style="font-size: 20px;">💍</span>`;
+        html += renderPersonCard(sp, "Turmush o‘rtog‘i");
+      });
+      html += `</div>`;
+
+      html += `<div class="tree-line-v" style="height: 24px; background: var(--primary);"></div>`;
+
+      // 3. AVLODLARI
+      const descendants = treeData.descendants || [];
+      html += `<div class="tree-section-label label-descendants">Farzandlari (${descendants.length})</div>`;
+      if (descendants.length > 0) {
+        html += `<div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;">`;
+        html += renderDescendants(descendants, 0);
+        html += `</div>`;
+      } else {
+        html += emptyNote("Farzandlar kiritilmagan");
+      }
+
+      document.getElementById('tree-root').innerHTML = html;
+    }
+
+    function renderAvatar(p) {
+      if (p.photo_url) {
+        return `<img src="${escapeHtml(p.photo_url)}" alt="" loading="lazy" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+      }
+      return escapeHtml(p.first_name ? p.first_name[0] : '🕊️');
+    }
+
+    function renderPersonCard(p, relation, isFocal = false, childrenCount = 0, isExpanded = false) {
+      if (!p) return '';
+      const idx = nodeRegistry.push({ ...p, relation, isFocal }) - 1;
+      const years = `${p.birth_year || '?'} — ${p.death_year || '?'}`;
+
+      let expandHtml = '';
+      if (childrenCount > 0) {
+        expandHtml = `
+          <div class="expand-chip" onclick="event.stopPropagation(); toggleChild(${Number(p.id)})">
+            ${isExpanded ? 'Yopish ▴' : `Avlodlari (${childrenCount}) ▾`}
+          </div>`;
+      }
+
+      return `
+        <div class="person-card ${isFocal ? 'focal-card' : ''}" onclick="showModal(${idx})">
+          <div class="card-top">
+            <div class="card-avatar" style="overflow:hidden;">${renderAvatar(p)}</div>
+            <div style="flex:1; min-width:0;">
+              <div class="card-relation">${escapeHtml(relation)}</div>
+              <div class="card-name">${escapeHtml(p.full_name)}</div>
+              <div class="card-years">${escapeHtml(years)}</div>
+            </div>
+          </div>
+          ${expandHtml}
+        </div>`;
+    }
+
+    function toggleChild(id) {
+      expandedMap[id] = !expandedMap[id];
+      renderTree();
+    }
+
+    function showModal(idx) {
+      const p = nodeRegistry[idx];
+      if (!p) return;
+      document.getElementById('m-relation').innerText = p.relation || "Qarindoshlik";
+      document.getElementById('m-avatar').innerHTML = renderAvatar(p);
+      document.getElementById('m-name').innerText = p.full_name;
+      document.getElementById('m-years').innerText = `📅 ${p.birth_year || '?'} — ${p.death_year || '?'}`;
+      document.getElementById('m-bio').innerText = p.biography_preview || "Qo‘shimcha tarjimai hol kiritilmagan.";
+
+      let badgesHtml = '';
+      if (p.cemetery_name) badgesHtml += `<span class="badge" style="background:#EEF4F0; color:#18382B;">📍 ${escapeHtml(p.cemetery_name)}</span>`;
+      if (p.grave_number) badgesHtml += `<span class="badge" style="background:#EEF4F0; color:#18382B; font-weight:700;">Qabr: ${escapeHtml(p.grave_number)}</span>`;
+      document.getElementById('m-badges').innerHTML = badgesHtml;
+
+      const navBtn = document.getElementById('m-navigate-btn');
+      if (!p.isFocal && p.public_token) {
+        navBtn.style.display = 'block';
+        navBtn.href = `/m/${encodeURIComponent(p.public_token)}/`;
+      } else {
+        navBtn.style.display = 'none';
+      }
+
+      document.getElementById('modal-sheet').classList.add('open');
+    }
+
+    function closeModal(e) {
+      if (!e || e.target.id === 'modal-sheet' || e.target.tagName === 'BUTTON') {
+        document.getElementById('modal-sheet').classList.remove('open');
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    function copyLinkFallback(url) {
+      // navigator.clipboard faqat HTTPS (xavfsiz kontekst) da mavjud
+      const input = document.createElement('textarea');
+      input.value = url;
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.appendChild(input);
+      input.select();
+      try { document.execCommand('copy'); } finally { document.body.removeChild(input); }
+    }
+
+    async function shareMemorial() {
+      const url = window.location.href;
+      if (navigator.share) {
+        navigator.share({ title: `${PERSON_NAME} — Abadiy Xotira`, url }).catch(() => {});
+        return;
+      }
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          copyLinkFallback(url);
+        }
+        alert("Xotira sahifasi havolasi nusxalandi!");
+      } catch (err) {
+        prompt("Havolani nusxalang:", url);
+      }
+    }
+  </script>
+</body>
+</html>
